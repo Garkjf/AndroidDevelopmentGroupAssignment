@@ -1,13 +1,17 @@
 package com.example.recipefinder;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
+
+import com.example.recipefinder.model.Recipe;
+import com.example.recipefinder.model.RecipePreview;
+import com.example.recipefinder.utils.JSONConverter;
+import com.example.recipefinder.utils.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,11 +36,7 @@ public class RecipeController {
     private void makeRequest(String url, Response.Listener<JSONObject> responseListener,
                              ResponseListener<?> listener) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                responseListener,
-                error -> {
-                    listener.onError("API Error");
-                    Toast.makeText(context, "API Error", Toast.LENGTH_SHORT).show();
-                }
+                responseListener, error -> listener.onError("API Error")
         );
 
         VolleySingleton.getInstance(context).addToRequestQueue(request);

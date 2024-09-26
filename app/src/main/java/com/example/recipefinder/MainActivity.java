@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.recipefinder.adapter.RecipeAdapter;
+import com.example.recipefinder.model.RecipePreview;
+import com.example.recipefinder.ui.RecipeActivity;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnItemClickListener {
