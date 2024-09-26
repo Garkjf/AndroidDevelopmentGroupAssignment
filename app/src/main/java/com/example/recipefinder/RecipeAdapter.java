@@ -39,10 +39,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipePreview listItem = recipes.get(position);
-        holder.recipeTitle.setText(listItem.name);
-        holder.recipeDesc.setText(listItem.desc);
+        holder.recipeTitle.setText(listItem.getName());
+        holder.recipeDesc.setText(listItem.getDesc());
 
-        Picasso.get().load(listItem.imgURL).resize(300,300)
+        Picasso.get().load(listItem.getImgURL()).resize(300,300)
                 .centerCrop().into(holder.recipeImg);
 
         holder.btnViewRecipe.setOnClickListener(v -> listener.onViewClick(listItem));

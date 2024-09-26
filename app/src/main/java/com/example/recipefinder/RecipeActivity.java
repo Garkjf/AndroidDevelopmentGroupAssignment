@@ -41,7 +41,7 @@ public class RecipeActivity extends AppCompatActivity {
         RecipeController controller = new RecipeController(RecipeActivity.this);
 
         assert id != null;
-        controller.getFullRecipe(id, new RecipeController.ViewResponseListener() {
+        controller.getFullRecipe(id, new RecipeController.ResponseListener<Recipe>() {
             @Override
             public void onError(String message) {
                 Toast.makeText(RecipeActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -53,11 +53,12 @@ public class RecipeActivity extends AppCompatActivity {
                 ingredientList.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
                 ingredientList.setNestedScrollingEnabled(false);
 
-                IngredientAdapter adapter = new IngredientAdapter(recipe.ingredients, recipe.measures);
+                IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients(),
+                        recipe.getMeasures());
                 ingredientList.setAdapter(adapter);
 
                 TextView instructionText = findViewById(R.id.instructionText);
-                instructionText.setText(recipe.instruction);
+                instructionText.setText(recipe.getInstruction());
             }
         });
     }

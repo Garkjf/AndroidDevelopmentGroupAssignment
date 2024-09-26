@@ -39,16 +39,20 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnI
             public boolean onQueryTextSubmit(String query) {
                 String searchTerm = query.toLowerCase();
 
-                controller.getRecipes(searchTerm, new RecipeController.SearchResponseListener() {
-                    @Override
-                    public void onError(String message) {
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                    }
+                controller.getRecipes(searchTerm,
+                    new RecipeController.ResponseListener<List<RecipePreview>>() {
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
 
-                    @Override
-                    public void onResponse(List<RecipePreview> recipes) {
-                        displayRecipes(recipes);
-                    }
+                        @SuppressLint("DefaultLocale")
+                        @Override
+                        public void onResponse(List<RecipePreview> recipes) {
+                            RecipeAdapter adapter = new RecipeAdapter(recipes, MainActivity.this);
+                            countText.setText(String.format("%d results found", recipes.size()));
+                            recipeView.setAdapter(adapter);
+                        }
                 });
 
                 return false;
@@ -61,21 +65,14 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnI
         });
     }
 
-    @SuppressLint("DefaultLocale")
-    private void displayRecipes(List<RecipePreview> recipes) {
-        RecipeAdapter adapter = new RecipeAdapter(recipes, MainActivity.this);
-        countText.setText(String.format("%d results found", recipes.size()));
-        recipeView.setAdapter(adapter);
-    }
-
     @Override
     public void onViewClick(RecipePreview item) {
         Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
 
-        intent.putExtra("RECIPE_ID", item.id);
-        intent.putExtra("RECIPE_NAME", item.name);
-        intent.putExtra("RECIPE_IMG", item.imgURL);
-        intent.putExtra("RECIPE_DESC", item.desc);
+        intent.putExtra("RECIPE_ID", item.getId());
+        intent.putExtra("RECIPE_NAME", item.getName());
+        intent.putExtra("RECIPE_IMG", item.getImgURL());
+        intent.putExtra("RECIPE_DESC", item.getDesc());
 
         startActivity(intent);
     }
