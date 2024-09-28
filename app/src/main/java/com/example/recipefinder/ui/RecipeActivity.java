@@ -2,6 +2,7 @@ package com.example.recipefinder.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,9 +16,12 @@ import com.example.recipefinder.R;
 import com.example.recipefinder.RecipeController;
 import com.example.recipefinder.adapter.IngredientAdapter;
 import com.example.recipefinder.model.Recipe;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.squareup.picasso.Picasso;
 
 public class RecipeActivity extends AppCompatActivity {
+    private RecyclerView ingredientList;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +48,35 @@ public class RecipeActivity extends AppCompatActivity {
 
         RecipeController controller = new RecipeController(RecipeActivity.this);
 
+        ingredientList = findViewById(R.id.ingredientList);
+        ingredientList.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
+        ingredientList.setNestedScrollingEnabled(false);
+        ingredientList.setVisibility(View.GONE);
+
+        shimmerFrameLayout = findViewById(R.id.shimmerLayout);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+
         assert id != null;
         controller.getFullRecipe(id, new RecipeController.ResponseListener<Recipe>() {
             @Override
             public void onError(String message) {
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                ingredientList.setVisibility(View.VISIBLE);
+
                 Toast.makeText(RecipeActivity.this, message, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(Recipe recipe) {
-                RecyclerView ingredientList = findViewById(R.id.ingredientList);
-                ingredientList.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
-                ingredientList.setNestedScrollingEnabled(false);
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
 
                 IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients(),
                         recipe.getMeasures());
                 ingredientList.setAdapter(adapter);
+                ingredientList.setVisibility(View.VISIBLE);
 
                 TextView instructionText = findViewById(R.id.instructionText);
                 instructionText.setText(recipe.getInstruction());

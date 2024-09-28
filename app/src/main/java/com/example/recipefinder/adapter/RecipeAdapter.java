@@ -19,15 +19,18 @@ import java.util.List;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
     private final List<RecipePreview> recipes;
-    private final OnItemClickListener listener;
+    private OnItemClickListener onClickListener;
 
     public interface OnItemClickListener {
-        void onViewClick(RecipePreview item);
+        void onClick(RecipePreview item);
     }
 
-    public RecipeAdapter(List<RecipePreview> listItems, OnItemClickListener listener) {
+    public RecipeAdapter(List<RecipePreview> listItems) {
         this.recipes = listItems;
-        this.listener = listener;
+    }
+
+    public void setOnClickListener(OnItemClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
@@ -47,7 +50,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         Picasso.get().load(listItem.getImgURL()).resize(300,300)
                 .centerCrop().into(holder.recipeImg);
 
-        holder.btnViewRecipe.setOnClickListener(v -> listener.onViewClick(listItem));
+        holder.btnViewRecipe.setOnClickListener(v -> {
+            if (onClickListener != null) {
+                onClickListener.onClick(listItem);
+            }
+        });
     }
 
     @Override

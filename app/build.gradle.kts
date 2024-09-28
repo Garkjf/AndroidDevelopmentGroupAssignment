@@ -33,6 +33,7 @@ android {
 
 dependencies {
     implementation(libs.squareup.picasso)
+    implementation(libs.facebook.shimmer)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
