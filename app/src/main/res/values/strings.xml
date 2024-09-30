@@ -7,4 +7,7 @@
     <string name="view">View</string>
     <string name="ingredients">Ingredients</string>
     <string name="instructions">Instructions</string>
+    <string name="categories">Categories</string>
+    <string name="areas">Areas</string>
+    <string name="random_recipe">Random Recipe</string>
 </resources>

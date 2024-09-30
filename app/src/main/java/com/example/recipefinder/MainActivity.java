@@ -1,46 +1,39 @@
 package com.example.recipefinder;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
-import com.example.recipefinder.adapter.RecipeAdapter;
-import com.example.recipefinder.model.RecipePreview;
-import com.example.recipefinder.ui.RecipeActivity;
-import com.facebook.shimmer.ShimmerFrameLayout;
+import com.example.recipefinder.api.RecipeDAO;
+import com.example.recipefinder.api.ResponseListener;
+import com.example.recipefinder.ui.SearchResultActivity;
+import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recipeView;
-    private RecipeController controller;
-    private TextView countText;
-
-    private ShimmerFrameLayout shimmerFrameLayout;
+    RecipeDAO recipeDAO;
+    FlexboxLayout categoryLayout, areaLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
-        controller = new RecipeController(MainActivity.this);
-
-        recipeView = findViewById(R.id.recipeView);
-        recipeView.setHasFixedSize(true);
-        recipeView.setLayoutManager(new LinearLayoutManager(this));
-
-        countText = findViewById(R.id.countText);
-        shimmerFrameLayout = findViewById(R.id.shimmerLayout);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         SearchView searchBar = findViewById(R.id.searchBar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -53,7 +46,12 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                searchRecipes(searchTerm);
+
+                Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
+                intent.putExtra("SEARCH_TYPE", "query");
+                intent.putExtra("SEARCH_TERM", searchTerm);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 return true;
             }
 
@@ -62,50 +60,95 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        recipeDAO = RecipeDAO.getInstance(this);
+        setupCategories();
+        setupAreas();
     }
 
-    public void searchRecipes(String searchTerm) {
-        recipeView.setVisibility(View.GONE);
-        shimmerFrameLayout.setVisibility(View.VISIBLE);
-        shimmerFrameLayout.startShimmer();
+    private void setupCategories() {
+        categoryLayout = findViewById(R.id.categoryLayout);
 
-        controller.getRecipes(searchTerm,
-            new RecipeController.ResponseListener<List<RecipePreview>>() {
-                @Override
-                public void onError(String message) {
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
-                    recipeView.setVisibility(View.VISIBLE);
+        recipeDAO.getCategories(new ResponseListener<List<String>>() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
 
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            @Override
+            public void onResponse(List<String> response) {
+                for (String category : response) {
+                    TextView textView = new TextView(MainActivity.this);
+                    textView.setText(category);
+                    textView.setPadding(16, 16, 16, 16);
+                    textView.setTextColor(Color.WHITE);
+                    textView.setBackgroundResource(R.drawable.badge_background);
+
+                    FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                            FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                            FlexboxLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(8, 8, 8, 8);
+                    textView.setLayoutParams(params);
+
+                    categoryLayout.addView(textView);
+
+                    textView.setClickable(true); // Set clickable to true
+                    textView.setFocusable(true); // Set focusable to true
+
+                    // Set an OnClickListener
+                    textView.setOnClickListener(v -> {
+                        Intent intent = new Intent(MainActivity.this,
+                                SearchResultActivity.class);
+                        intent.putExtra("SEARCH_TYPE", "category");
+                        intent.putExtra("SEARCH_TERM", category);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    });
                 }
-
-                @Override
-                public void onResponse(List<RecipePreview> recipes) {
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
-                    recipeView.setVisibility(View.VISIBLE);
-
-                    loadRecipes(recipes);
-                }
+            }
         });
     }
 
-    @SuppressLint("DefaultLocale")
-    public void loadRecipes(List<RecipePreview> recipes) {
-        RecipeAdapter adapter = new RecipeAdapter(recipes);
-        countText.setText(String.format("%d results found", recipes.size()));
+    private void setupAreas() {
+        areaLayout = findViewById(R.id.areaLayout);
 
-        adapter.setOnClickListener(item -> {
-            Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
+        recipeDAO.getAreas(new ResponseListener<List<String>>() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
 
-            intent.putExtra("RECIPE_ID", item.getId());
-            intent.putExtra("RECIPE_NAME", item.getName());
-            intent.putExtra("RECIPE_IMG", item.getImgURL());
-            intent.putExtra("RECIPE_DESC", item.getDesc());
+            @Override
+            public void onResponse(List<String> response) {
+                for (String area : response) {
+                    TextView textView = new TextView(MainActivity.this);
+                    textView.setText(area);
+                    textView.setPadding(16, 16, 16, 16);
+                    textView.setTextColor(Color.WHITE);
+                    textView.setBackgroundResource(R.drawable.badge_background);
 
-            startActivity(intent);
+                    FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                            FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                            FlexboxLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(8, 8, 8, 8);
+                    textView.setLayoutParams(params);
+
+                    areaLayout.addView(textView);
+
+                    textView.setClickable(true);
+                    textView.setFocusable(true);
+
+                    // Set an OnClickListener
+                    textView.setOnClickListener(v -> {
+                        Intent intent = new Intent(MainActivity.this,
+                                SearchResultActivity.class);
+                        intent.putExtra("SEARCH_TYPE", "area");
+                        intent.putExtra("SEARCH_TERM", area);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    });
+                }
+            }
         });
-        recipeView.setAdapter(adapter);
     }
 }

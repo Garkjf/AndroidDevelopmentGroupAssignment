@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="40dp"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -26,40 +25,33 @@
         android:queryHint="@string/search_recipe" />
 
     <TextView
-        android:id="@+id/countText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:layout_marginStart="20dp"
+        android:text="@string/categories"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp" />
-
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmerLayout"
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/categoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:animationCache="true"
-        app:shimmer_repeat_mode="restart"
-        app:shimmer_shape="radial">
+        android:layout_margin="16dp"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/areas"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-            <include layout="@layout/recipe_preview_shimmer" />
-            <include layout="@layout/recipe_preview_shimmer" />
-            <include layout="@layout/recipe_preview_shimmer" />
-            <include layout="@layout/recipe_preview_shimmer" />
-            <include layout="@layout/recipe_preview_shimmer" />
-
-        </LinearLayout>
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/areaLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start" />
 
 </LinearLayout>

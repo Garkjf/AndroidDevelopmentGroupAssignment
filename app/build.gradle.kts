@@ -34,10 +34,11 @@ android {
 dependencies {
     implementation(libs.squareup.picasso)
     implementation(libs.facebook.shimmer)
+    implementation(libs.volley)
+    implementation(libs.google.flexbox)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
-    implementation(libs.volley)
     implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
