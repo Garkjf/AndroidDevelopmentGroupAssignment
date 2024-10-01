@@ -84,7 +84,7 @@ public class RecipeDAO {
                 List<RecipePreview> recipes = JSONConverter.getRecipes(response);
                 listener.onResponse(recipes);
             } catch (JSONException e) {
-                listener.onError("Cannot fetch recipes");
+                listener.onError("Recipes not found");
             }
         }, listener);
     }
@@ -116,7 +116,7 @@ public class RecipeDAO {
      * @param listener Listener for response
      */
     public void getRecipesByArea(@NonNull String area, ResponseListener<List<RecipePreview>> listener) {
-        String url = String.format(urlPrefix+"filter.php?a=%s", area);
+        String url = String.format(urlPrefix + "filter.php?a=%s", area);
         fetchRecipes(url, listener);
     }
 
@@ -125,7 +125,7 @@ public class RecipeDAO {
      * @param listener Listener for response
      */
     public void getCategories(ResponseListener<List<String>> listener) {
-        String url = urlPrefix+"list.php?c=list";
+        String url = urlPrefix + "list.php?c=list";
 
         makeRequest(url, response -> {
             try {
@@ -142,7 +142,7 @@ public class RecipeDAO {
      * @param listener Listener for response
      */
     public void getAreas(ResponseListener<List<String>> listener) {
-        String url = urlPrefix+"list.php?a=list";
+        String url = urlPrefix + "list.php?a=list";
 
         makeRequest(url, response -> {
             try {
@@ -160,14 +160,29 @@ public class RecipeDAO {
      * @param listener Listener for response
      */
     public void getFullRecipe(@NonNull String id, ResponseListener<Recipe> listener) {
-        String url = String.format(urlPrefix+"lookup.php?i=%s", id);
-
+        String url = String.format(urlPrefix + "lookup.php?i=%s", id);
         makeRequest(url, response -> {
             try {
                 Recipe recipe = JSONConverter.getFullRecipe(response);
                 listener.onResponse(recipe);
             } catch (JSONException e) {
-                listener.onError("Cannot fetch full recipe");
+                listener.onError("Recipe not found");
+            }
+        }, listener);
+    }
+
+    /**
+     * Retrieves a random recipe
+     * @param listener Listener for response
+     */
+    public void getRandomRecipe(ResponseListener<RecipePreview> listener) {
+        String url = urlPrefix+"random.php";
+        makeRequest(url, response -> {
+            try {
+                RecipePreview recipe = JSONConverter.getRecipes(response).get(0);
+                listener.onResponse(recipe);
+            } catch (JSONException e) {
+                listener.onError("Recipes not found");
             }
         }, listener);
     }
