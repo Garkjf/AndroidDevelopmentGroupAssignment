@@ -171,4 +171,20 @@ public class RecipeDAO {
             }
         }, listener);
     }
+
+    /**
+     * Retrieves a random recipe
+     * @param listener Listener for response
+     */
+    public void getRandomRecipe(ResponseListener<RecipePreview> listener) {
+        String url = urlPrefix+"random.php";
+        makeRequest(url, response -> {
+            try {
+                RecipePreview recipe = JSONConverter.getRecipes(response).get(0);
+                listener.onResponse(recipe);
+            } catch (JSONException e) {
+                listener.onError("Recipes not found");
+            }
+        }, listener);
+    }
 }

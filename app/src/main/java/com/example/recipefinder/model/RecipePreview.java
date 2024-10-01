@@ -1,7 +1,7 @@
 package com.example.recipefinder.model;
 
 public class RecipePreview {
-    private final String name, imgURL, id;
+    private String name, imgURL, id;
 
     public RecipePreview(String id, String name, String imgURL) {
         this.name = name;
@@ -19,5 +19,17 @@ public class RecipePreview {
 
     public String getId() {
         return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
