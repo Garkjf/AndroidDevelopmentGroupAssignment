@@ -61,40 +61,4 @@ public class JSONConverter {
 
         return recipe;
     }
-
-    /**
-     * Returns a list of categories from the JSON response
-     * @param response JSON response from API
-     * @return A list of categories
-     * @throws JSONException If JSON response is malformed
-     */
-    public static List<String> getCategories(JSONObject response) throws JSONException {
-        JSONArray categoryJSON = response.getJSONArray("meals");
-        List<String> categories = new ArrayList<>();
-
-        for (int i = 0; i < categoryJSON.length(); i++) {
-            JSONObject categoryObject = categoryJSON.getJSONObject(i);
-            categories.add(categoryObject.getString("strCategory"));
-        }
-
-        return categories;
-    }
-
-    /**
-     * Returns a list of areas from the JSON response
-     * @param response JSON response from API
-     * @return A list of areas
-     * @throws JSONException If JSON response is malformed
-     */
-    public static List<String> getAreas(JSONObject response) throws JSONException {
-        JSONArray categoryJSON = response.getJSONArray("meals");
-        List<String> areas = new ArrayList<>();
-
-        for (int i = 0; i < categoryJSON.length(); i++) {
-            JSONObject categoryObject = categoryJSON.getJSONObject(i);
-            areas.add(categoryObject.getString("strArea"));
-        }
-
-        return areas;
-    }
 }

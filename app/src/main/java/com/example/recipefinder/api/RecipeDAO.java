@@ -121,40 +121,6 @@ public class RecipeDAO {
     }
 
     /**
-     * Retrieves a list of categories
-     * @param listener Listener for response
-     */
-    public void getCategories(ResponseListener<List<String>> listener) {
-        String url = urlPrefix+"list.php?c=list";
-
-        makeRequest(url, response -> {
-            try {
-                List<String> categories = JSONConverter.getCategories(response);
-                listener.onResponse(categories);
-            } catch (JSONException e) {
-                listener.onError("Cannot fetch categories");
-            }
-        }, listener);
-    }
-
-    /**
-     * Retrieves a list of areas
-     * @param listener Listener for response
-     */
-    public void getAreas(ResponseListener<List<String>> listener) {
-        String url = urlPrefix+"list.php?a=list";
-
-        makeRequest(url, response -> {
-            try {
-                List<String> areas = JSONConverter.getAreas(response);
-                listener.onResponse(areas);
-            } catch (JSONException e) {
-                listener.onError("Cannot fetch areas");
-            }
-        }, listener);
-    }
-
-    /**
      * Retrieves a full recipe
      * @param id Recipe ID
      * @param listener Listener for response
