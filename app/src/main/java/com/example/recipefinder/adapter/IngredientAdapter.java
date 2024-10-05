@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipefinder.R;
+import com.example.recipefinder.model.Ingredient;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -18,16 +19,14 @@ import java.util.List;
  * Adapter for ingredients list in RecipeActivity
  */
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
-    private final List<String> ingredients, measures;
+    private final List<Ingredient> ingredients;
 
     /**
      * Constructor for IngredientAdapter
      * @param ingredients List of ingredients
-     * @param measures List of measures
      */
-    public IngredientAdapter(List<String> ingredients, List<String> measures) {
+    public IngredientAdapter(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
-        this.measures = measures;
     }
 
     /**
@@ -53,12 +52,13 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String ingredient = ingredients.get(position), measure = measures.get(position);
-        holder.ingrName.setText(String.format("%s %s", measure, ingredient));
+        Ingredient ingredient = ingredients.get(position);
+        holder.ingrName.setText(ingredient.toString());
 
         String imgURL = String.format("https://www.themealdb.com/images/ingredients/%s-Small.png",
-                                        ingredient.replace(" ", "%20"));
-        Picasso.get().load(imgURL).resize(200, 200).centerCrop().into(holder.ingrImg);
+                                        ingredient.getName().replace(" ", "%20"));
+        Picasso.get().load(imgURL).resize(80, 80)
+                .centerCrop().placeholder(R.drawable.ic_ingredient).into(holder.ingrImg);
     }
 
     /**

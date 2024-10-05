@@ -1,6 +1,7 @@
 package com.example.recipefinder.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.example.recipefinder.api.RecipeDAO;
 import com.example.recipefinder.api.ResponseListener;
 import com.example.recipefinder.model.RecipePreview;
 import com.example.recipefinder.utils.SearchType;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class SearchResultActivity extends AppCompatActivity {
     private RecyclerView recipeView;
     private TextView countText;
     private RecipeDAO recipeDAO;
+    private ShimmerFrameLayout shimmerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class SearchResultActivity extends AppCompatActivity {
         }
 
         recipeDAO = RecipeDAO.getInstance(this);
+        shimmerLayout = findViewById(R.id.shimmerLayout);
 
         TextView searchDesc = findViewById(R.id.searchDesc);
         RecipeSearchHandler searchHandler = null;
@@ -84,6 +88,13 @@ public class SearchResultActivity extends AppCompatActivity {
         searchRecipes(searchTerm, searchHandler);
     }
 
+    public static Intent setIntent(Context activity, SearchType searchType, String searchTerm) {
+        Intent i = new Intent(activity, SearchResultActivity.class);
+        i.putExtra("SEARCH_TYPE", searchType);
+        i.putExtra("SEARCH_TERM", searchTerm);
+        return i;
+    }
+
     // Interface to handle different search types
     interface RecipeSearchHandler {
         void search(String searchTerm, ResponseListener<List<RecipePreview>> listener);
@@ -91,12 +102,16 @@ public class SearchResultActivity extends AppCompatActivity {
 
     // General method to handle recipe search
     private void searchRecipes(String searchTerm, RecipeSearchHandler searchHandler) {
+        recipeView.setVisibility(View.GONE);
+        shimmerLayout.setVisibility(View.VISIBLE);
+        shimmerLayout.startShimmer();
 
         // Call the appropriate search method through the handler
         searchHandler.search(searchTerm, new ResponseListener<List<RecipePreview>>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onError(String message) {
+                shimmerLayout.stopShimmer();
                 Toast.makeText(SearchResultActivity.this, message,
                         Toast.LENGTH_SHORT).show();
                 countText.setText("No results found");
@@ -104,8 +119,9 @@ public class SearchResultActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(List<RecipePreview> recipes) {
+                shimmerLayout.stopShimmer();
+                shimmerLayout.setVisibility(View.GONE);
                 recipeView.setVisibility(View.VISIBLE);
-
                 loadRecipes(recipes);
             }
         });
@@ -118,13 +134,7 @@ public class SearchResultActivity extends AppCompatActivity {
         countText.setText(String.format("%d results found", recipes.size()));
 
         adapter.setOnClickListener(item -> {
-            Intent intent = new Intent(SearchResultActivity.this, RecipeActivity.class);
-
-            intent.putExtra("RECIPE_ID", item.getId());
-            intent.putExtra("RECIPE_NAME", item.getName());
-            intent.putExtra("RECIPE_IMG", item.getImgURL());
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
+            Intent intent = RecipeActivity.newIntent(this, item);
             startActivity(intent);
         });
         recipeView.setAdapter(adapter);

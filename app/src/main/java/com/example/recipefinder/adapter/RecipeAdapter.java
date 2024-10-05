@@ -3,7 +3,7 @@ package com.example.recipefinder.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,14 +14,15 @@ import com.example.recipefinder.R;
 import com.example.recipefinder.model.RecipePreview;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Adapter for recipes list in MainActivity
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
-    private final List<RecipePreview> recipes;
-    private OnItemClickListener onClickListener;
+    private static List<RecipePreview> recipes = Collections.emptyList();
+    private static OnItemClickListener onClickListener;
 
     /**
      * Interface for click listener
@@ -39,7 +40,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
      * @param listItems List of recipes
      */
     public RecipeAdapter(List<RecipePreview> listItems) {
-        this.recipes = listItems;
+        recipes = listItems;
     }
 
     /**
@@ -47,7 +48,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
      * @param onClickListener Click listener
      */
     public void setOnClickListener(OnItemClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+        RecipeAdapter.onClickListener = onClickListener;
     }
 
     /**
@@ -77,12 +78,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         RecipePreview listItem = recipes.get(position);
         holder.recipeTitle.setText(listItem.getName());
 
-        Picasso.get().load(listItem.getImgURL()).resize(300,300)
-                .centerCrop().into(holder.recipeImg);
+        Picasso.get().load(listItem.getImgURL()+"/preview").resize(300, 300)
+                .centerCrop().placeholder(R.drawable.ic_recipe).into(holder.recipeImg);
 
-        holder.btnViewRecipe.setOnClickListener(v -> {
-            if (onClickListener != null) {
-                onClickListener.onClick(listItem);
+        ImageButton favButton = holder.favButton;
+        favButton.setOnClickListener(v -> {
+            if (holder.isFavourite) {
+                favButton.setBackgroundResource(R.drawable.baseline_bookmark_border_24);
+                holder.isFavourite = false;
+            } else {
+                favButton.setBackgroundResource(R.drawable.baseline_bookmark_24);
+                holder.isFavourite = true;
             }
         });
     }
@@ -93,14 +99,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView recipeImg;
         public TextView recipeTitle;
-        public Button btnViewRecipe;
+        public ImageButton favButton;
+        public boolean isFavourite = false;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             recipeImg = itemView.findViewById(R.id.ingr_img);
             recipeTitle = itemView.findViewById(R.id.ingr_name);
-            btnViewRecipe = itemView.findViewById(R.id.btn_viewRecipe);
+            favButton = itemView.findViewById(R.id.favourite_button);
+
+            itemView.setOnClickListener(v -> {
+                if (onClickListener != null) {
+                    onClickListener.onClick(recipes.get(getAdapterPosition()));
+                }
+            });
         }
     }
 }

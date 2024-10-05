@@ -1,6 +1,8 @@
 package com.example.recipefinder.model;
 
-public class RecipePreview {
+import java.io.Serializable;
+
+public class RecipePreview implements Serializable {
     private String name, imgURL, id;
 
     public RecipePreview(String id, String name, String imgURL) {

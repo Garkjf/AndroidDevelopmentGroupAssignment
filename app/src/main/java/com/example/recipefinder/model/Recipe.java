@@ -8,8 +8,7 @@ import java.util.List;
  */
 public class Recipe {
     private final String instruction, description;
-    private final List<String> ingredients = new ArrayList<>();
-    private final List<String> measures = new ArrayList<>();
+    private final List<Ingredient> ingredients = new ArrayList<>();
 
     /**
      * Constructor for Recipe
@@ -20,8 +19,6 @@ public class Recipe {
         this.description = description;
         this.instruction = instruction;
     }
-
-
 
     /**
      * Returns the instruction
@@ -43,16 +40,8 @@ public class Recipe {
      * Returns the ingredients
      * @return Ingredients
      */
-    public List<String> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
-    }
-
-    /**
-     * Returns the measures
-     * @return Measures
-     */
-    public List<String> getMeasures() {
-        return measures;
     }
 
     /**
@@ -61,7 +50,6 @@ public class Recipe {
      * @param measure Measure of the ingredient
      */
     public void addIngredient(String ingredient, String measure) {
-        this.ingredients.add(ingredient);
-        this.measures.add(measure);
+        this.ingredients.add(new Ingredient(ingredient, measure));
     }
 }

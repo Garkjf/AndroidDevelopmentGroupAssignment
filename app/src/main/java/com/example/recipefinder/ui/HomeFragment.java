@@ -5,40 +5,40 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.recipefinder.R;
+import com.example.recipefinder.adapter.RecipeAdapter;
 import com.example.recipefinder.api.RecipeDAO;
 import com.example.recipefinder.api.ResponseListener;
 import com.example.recipefinder.model.RecipePreview;
 import com.example.recipefinder.utils.SearchType;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.flexbox.FlexboxLayout;
-import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
     RecipeDAO recipeDAO;
 
-    ImageView recipeImg;
-    TextView recipeNameText;
-    Button btnViewRecipe;
+    private RecyclerView recipeView;
 
     RecipePreview randomRecipe = new RecipePreview("", "", "");
 
     private View view;
-    private FlexboxLayout areaLayout;
-    private FlexboxLayout categoryLayout;
-    private CardView recipeCard;
+    private FlexboxLayout areaLayout, categoryLayout;
+    private ShimmerFrameLayout shimmerLayout;
 
     public HomeFragment() {}
 
@@ -52,14 +52,17 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        recipeImg = view.findViewById(R.id.recipe_img);
-        recipeNameText = view.findViewById(R.id.recipe_name);
-        btnViewRecipe = view.findViewById(R.id.btn_viewRecipe);
-        recipeCard = view.findViewById(R.id.previewCard);
+        recipeView = view.findViewById(R.id.recipeView);
+        recipeView.setHasFixedSize(true);
+        recipeView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         categoryLayout = view.findViewById(R.id.categoryLayout);
         areaLayout = view.findViewById(R.id.areaLayout);
+        shimmerLayout = view.findViewById(R.id.shimmerLayout);
 
-        restoreSavedInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            randomRecipe = (RecipePreview) savedInstanceState.getSerializable("RECIPE");
+        }
         setupSearchBar();
 
         recipeDAO = RecipeDAO.getInstance(getActivity());
@@ -95,22 +98,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void restoreSavedInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            String recipeID = savedInstanceState.getString("RECIPE_ID", "");
-            if (!recipeID.isEmpty()) {
-                randomRecipe.setId(recipeID);
-                randomRecipe.setName(savedInstanceState.getString("RECIPE_NAME", ""));
-                randomRecipe.setImgURL(savedInstanceState.getString("IMG_URL", ""));
-            }
-        }
-    }
-
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString("RECIPE_ID", randomRecipe.getId());
-        savedInstanceState.putString("RECIPE_NAME", randomRecipe.getName());
-        savedInstanceState.putString("IMG_URL", randomRecipe.getImgURL());
+        savedInstanceState.putSerializable("RECIPE", randomRecipe);
     }
 
     private void showErrorMessage(String message) {
@@ -118,10 +108,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void navigateToSearchResult(SearchType type, String searchQuery) {
-        Intent i = new Intent(getActivity(), SearchResultActivity.class);
-        i.putExtra("SEARCH_TYPE", type.toString());
-        i.putExtra("SEARCH_TERM", searchQuery);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent i = SearchResultActivity.setIntent(getActivity(), type, searchQuery);
         startActivity(i);
     }
 
@@ -144,39 +131,38 @@ public class HomeFragment extends Fragment {
 
     // Random recipe functions
     private void loadRandomRecipe() {
-        recipeCard.setVisibility(View.INVISIBLE);
-
         if (!randomRecipe.getId().isEmpty()) {
             displayRandomRecipe();
             return;
         }
 
+        recipeView.setVisibility(View.INVISIBLE);
         recipeDAO.getRandomRecipe(new ResponseListener<RecipePreview>() {
             @Override
             public void onError(String message) {
+                shimmerLayout.stopShimmer();
                 showErrorMessage(message);
             }
             @Override
             public void onResponse(RecipePreview response) {
+                shimmerLayout.stopShimmer();
+                shimmerLayout.setVisibility(View.GONE);
                 randomRecipe = response;
                 displayRandomRecipe();
+                recipeView.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void displayRandomRecipe() {
-        Picasso.get().load(randomRecipe.getImgURL()).resize(300,300).
-                centerCrop().into(recipeImg);
-        recipeNameText.setText(randomRecipe.getName());
-        btnViewRecipe.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), RecipeActivity.class);
-            intent.putExtra("RECIPE_ID", randomRecipe.getId());
-            intent.putExtra("RECIPE_NAME", randomRecipe.getName());
-            intent.putExtra("RECIPE_IMG", randomRecipe.getImgURL());
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        List<RecipePreview> recipes = new ArrayList<>();
+        recipes.add(randomRecipe);
+        RecipeAdapter adapter = new RecipeAdapter(recipes);
+        adapter.setOnClickListener(item -> {
+            Intent intent = RecipeActivity.newIntent(getActivity(), item);
             startActivity(intent);
         });
-        recipeCard.setVisibility(View.VISIBLE);
+        recipeView.setAdapter(adapter);
     }
 
     private void loadCategories() {
