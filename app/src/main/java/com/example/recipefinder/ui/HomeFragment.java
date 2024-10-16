@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.example.recipefinder.R;
 import com.example.recipefinder.adapter.RecipeAdapter;
-import com.example.recipefinder.api.RecipeDAO;
+import com.example.recipefinder.api.RecipeRepository;
 import com.example.recipefinder.api.ResponseListener;
 import com.example.recipefinder.model.RecipePreview;
 import com.example.recipefinder.utils.SearchType;
@@ -30,17 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    RecipeDAO recipeDAO;
-
+    private RecipeRepository recipeRepo;
     private RecyclerView recipeView;
+    private RecipePreview randomRecipe = new RecipePreview(0, "", "");
 
-    RecipePreview randomRecipe = new RecipePreview("", "", "");
+    View view;
+    FlexboxLayout areaLayout, categoryLayout;
+    ShimmerFrameLayout shimmerLayout;
 
-    private View view;
-    private FlexboxLayout areaLayout, categoryLayout;
-    private ShimmerFrameLayout shimmerLayout;
-
-    public HomeFragment() {}
+    public HomeFragment(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +63,7 @@ public class HomeFragment extends Fragment {
         }
         setupSearchBar();
 
-        recipeDAO = RecipeDAO.getInstance(getActivity());
+        recipeRepo = new RecipeRepository(requireActivity());
 
         loadRandomRecipe();
         loadCategories();
@@ -131,13 +129,14 @@ public class HomeFragment extends Fragment {
 
     // Random recipe functions
     private void loadRandomRecipe() {
-        if (!randomRecipe.getId().isEmpty()) {
+        shimmerLayout.setVisibility(View.GONE);
+        if (randomRecipe.recipeId != 0) {
             displayRandomRecipe();
             return;
         }
 
         recipeView.setVisibility(View.INVISIBLE);
-        recipeDAO.getRandomRecipe(new ResponseListener<RecipePreview>() {
+        recipeRepo.getRandomRecipe(new ResponseListener<RecipePreview>() {
             @Override
             public void onError(String message) {
                 shimmerLayout.stopShimmer();
@@ -157,9 +156,10 @@ public class HomeFragment extends Fragment {
     private void displayRandomRecipe() {
         List<RecipePreview> recipes = new ArrayList<>();
         recipes.add(randomRecipe);
+
         RecipeAdapter adapter = new RecipeAdapter(recipes);
         adapter.setOnClickListener(item -> {
-            Intent intent = RecipeActivity.newIntent(getActivity(), item);
+            Intent intent = RecipeActivity.newIntent(getActivity(), item, false);
             startActivity(intent);
         });
         recipeView.setAdapter(adapter);

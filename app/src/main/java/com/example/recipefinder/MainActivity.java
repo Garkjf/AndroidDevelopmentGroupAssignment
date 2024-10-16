@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(homeFragment);
 
         binding.bottomNavMenu.setOnItemSelectedListener(item -> {
-
             if (item.getItemId() == R.id.home) {
                 replaceFragment(homeFragment);
             }

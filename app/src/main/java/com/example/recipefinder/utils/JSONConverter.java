@@ -27,7 +27,7 @@ public class JSONConverter {
         for (int i = 0; i < recipesArray.length(); i++) {
             JSONObject recipeObject = recipesArray.getJSONObject(i);
 
-            recipes.add(new RecipePreview(recipeObject.getString("idMeal"),
+            recipes.add(new RecipePreview(recipeObject.getInt("idMeal"),
                     recipeObject.getString("strMeal"),
                     recipeObject.getString("strMealThumb"))
             );
@@ -49,7 +49,10 @@ public class JSONConverter {
         String desc = String.format("%s, %s", recipeItem.getString("strCategory"),
                 recipeItem.getString("strArea"));
 
-        Recipe recipe = new Recipe(desc, instructions);
+        RecipePreview preview = new RecipePreview(recipeItem.getInt("idMeal"),
+                recipeItem.getString("strMeal"),
+                recipeItem.getString("strMealThumb"));
+        Recipe recipe = new Recipe(preview, desc, instructions);
 
         for (int i = 1; i <= 20; i++) {
             String ingredient = recipeItem.getString("strIngredient"+i).trim();

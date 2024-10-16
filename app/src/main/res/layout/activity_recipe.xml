@@ -15,6 +15,15 @@
         android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
+    <ImageButton
+        android:id="@+id/favourite_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="start"
+        android:background="@drawable/baseline_bookmark_border_24"
+        android:contentDescription="@string/favourite_button"
+        tools:ignore="RedundantDescriptionCheck,TouchTargetSizeCheck" />
+
     <ImageView
         android:id="@+id/ingr_img"
         android:layout_width="match_parent"

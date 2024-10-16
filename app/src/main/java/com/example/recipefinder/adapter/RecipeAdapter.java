@@ -12,17 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipefinder.R;
 import com.example.recipefinder.model.RecipePreview;
+import com.example.recipefinder.utils.BookmarkManager;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Adapter for recipes list in MainActivity
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
-    private static List<RecipePreview> recipes = Collections.emptyList();
+    private static List<RecipePreview> recipes;
     private static OnItemClickListener onClickListener;
+
+    public void updateRecipes(List<RecipePreview> recipes) {
+        RecipeAdapter.recipes = recipes;
+    }
 
     /**
      * Interface for click listener
@@ -76,21 +80,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipePreview listItem = recipes.get(position);
-        holder.recipeTitle.setText(listItem.getName());
+        holder.recipeTitle.setText(listItem.name);
 
-        Picasso.get().load(listItem.getImgURL()+"/preview").resize(300, 300)
+        Picasso.get().load(listItem.imgURL+"/preview").resize(300, 300)
                 .centerCrop().placeholder(R.drawable.ic_recipe).into(holder.recipeImg);
 
         ImageButton favButton = holder.favButton;
-        favButton.setOnClickListener(v -> {
-            if (holder.isFavourite) {
-                favButton.setBackgroundResource(R.drawable.baseline_bookmark_border_24);
-                holder.isFavourite = false;
-            } else {
-                favButton.setBackgroundResource(R.drawable.baseline_bookmark_24);
-                holder.isFavourite = true;
-            }
-        });
+        favButton.setBackgroundResource(R.drawable.baseline_bookmark_border_24);
+
+        BookmarkManager bookmarkManager = new BookmarkManager(holder.itemView.getContext());
+        bookmarkManager.initializeFavoriteButton(favButton, listItem);
     }
 
     @Override
@@ -100,7 +99,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         public ImageView recipeImg;
         public TextView recipeTitle;
         public ImageButton favButton;
-        public boolean isFavourite = false;
 
         public ViewHolder(View itemView) {
             super(itemView);

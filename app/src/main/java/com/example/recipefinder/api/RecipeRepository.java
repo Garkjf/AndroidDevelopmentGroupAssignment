@@ -20,26 +20,18 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
- * DAO (Data Access Object) for retrieving recipes
+ * Repository for retrieving recipes
  */
-public class RecipeDAO {
-    private static RecipeDAO instance;
+public class RecipeRepository {
     private final Context context;
     private final String urlPrefix = "https://www.themealdb.com/api/json/v1/1/";
 
     /**
-     * Constructor for RecipeDAO
+     * Constructor for RecipeRepository
      * @param context App context
      */
-    public RecipeDAO(Context context) {
+    public RecipeRepository(Context context) {
         this.context = context.getApplicationContext();
-    }
-
-    public static RecipeDAO getInstance(Context context) {
-        if (instance == null) {
-            instance = new RecipeDAO(context);
-        }
-        return instance;
     }
 
     /**
@@ -122,11 +114,11 @@ public class RecipeDAO {
 
     /**
      * Retrieves a full recipe
-     * @param id Recipe ID
+     * @param recipeID Recipe ID
      * @param listener Listener for response
      */
-    public void getFullRecipe(@NonNull String id, ResponseListener<Recipe> listener) {
-        String url = String.format(urlPrefix+"lookup.php?i=%s", id);
+    public void getFullRecipe(int recipeID, ResponseListener<Recipe> listener) {
+        String url = String.format(urlPrefix+"lookup.php?i=%s", recipeID);
 
         makeRequest(url, response -> {
             try {

@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipefinder.R;
 import com.example.recipefinder.adapter.RecipeAdapter;
-import com.example.recipefinder.api.RecipeDAO;
+import com.example.recipefinder.api.RecipeRepository;
 import com.example.recipefinder.api.ResponseListener;
 import com.example.recipefinder.model.RecipePreview;
 import com.example.recipefinder.utils.SearchType;
@@ -28,8 +28,8 @@ import java.util.List;
 
 public class SearchResultActivity extends AppCompatActivity {
     private RecyclerView recipeView;
-    private TextView countText;
-    private RecipeDAO recipeDAO;
+    private TextView countText, searchDesc;
+    private RecipeRepository recipeRepo;
     private ShimmerFrameLayout shimmerLayout;
 
     @Override
@@ -47,6 +47,9 @@ public class SearchResultActivity extends AppCompatActivity {
         recipeView.setHasFixedSize(true);
         recipeView.setLayoutManager(new LinearLayoutManager(this));
 
+        recipeRepo = new RecipeRepository(SearchResultActivity.this);
+        shimmerLayout = findViewById(R.id.shimmerLayout);
+
         countText = findViewById(R.id.countText);
 
         Intent i = getIntent();
@@ -60,38 +63,39 @@ public class SearchResultActivity extends AppCompatActivity {
             return;
         }
 
-        recipeDAO = RecipeDAO.getInstance(this);
-        shimmerLayout = findViewById(R.id.shimmerLayout);
+        searchDesc = findViewById(R.id.searchDesc);
+        handleSearch(type, searchTerm);
+    }
 
-        TextView searchDesc = findViewById(R.id.searchDesc);
+    private void handleSearch(SearchType type, String searchTerm) {
         RecipeSearchHandler searchHandler = null;
 
         switch (type) {
             case QUERY:
                 searchDesc.setText(String.format("Results for: \"%s\"", searchTerm));
-                searchHandler = (term, listener) -> recipeDAO.getRecipesByQuery(term, listener);
+                searchHandler = (term, listener) -> recipeRepo.getRecipesByQuery(term, listener);
                 break;
             case CATEGORY:
                 searchDesc.setText(String.format("Category: %s", searchTerm));
-                searchHandler = (term, listener) -> recipeDAO.getRecipesByCategory(term, listener);
+                searchHandler = (term, listener) -> recipeRepo.getRecipesByCategory(term, listener);
                 break;
             case AREA:
                 searchDesc.setText(String.format("Area: %s", searchTerm));
-                searchHandler = (term, listener) -> recipeDAO.getRecipesByArea(term, listener);
+                searchHandler = (term, listener) -> recipeRepo.getRecipesByArea(term, listener);
                 break;
             default:
                 Toast.makeText(this, "Invalid search type", Toast.LENGTH_SHORT).show();
                 finish();
         }
 
-        assert searchHandler != null;
         searchRecipes(searchTerm, searchHandler);
     }
 
     public static Intent setIntent(Context activity, SearchType searchType, String searchTerm) {
         Intent i = new Intent(activity, SearchResultActivity.class);
-        i.putExtra("SEARCH_TYPE", searchType);
+        i.putExtra("SEARCH_TYPE", searchType.toString());
         i.putExtra("SEARCH_TERM", searchTerm);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return i;
     }
 
@@ -132,9 +136,8 @@ public class SearchResultActivity extends AppCompatActivity {
     public void loadRecipes(List<RecipePreview> recipes) {
         RecipeAdapter adapter = new RecipeAdapter(recipes);
         countText.setText(String.format("%d results found", recipes.size()));
-
         adapter.setOnClickListener(item -> {
-            Intent intent = RecipeActivity.newIntent(this, item);
+            Intent intent = RecipeActivity.newIntent(SearchResultActivity.this, item, false);
             startActivity(intent);
         });
         recipeView.setAdapter(adapter);

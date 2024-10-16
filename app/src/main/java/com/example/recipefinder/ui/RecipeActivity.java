@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,17 +18,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipefinder.R;
-import com.example.recipefinder.api.RecipeDAO;
+import com.example.recipefinder.api.RecipeRepository;
 import com.example.recipefinder.adapter.IngredientAdapter;
 import com.example.recipefinder.api.ResponseListener;
+import com.example.recipefinder.db.RecipeDatabase;
 import com.example.recipefinder.model.Recipe;
 import com.example.recipefinder.model.RecipePreview;
+import com.example.recipefinder.utils.BookmarkManager;
 import com.squareup.picasso.Picasso;
 
 public class RecipeActivity extends AppCompatActivity {
     private RecyclerView ingredientList;
-    RecipePreview recipe;
-    RecipeDAO recipeDAO;
+    private RecipePreview preview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +44,16 @@ public class RecipeActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         if (!i.hasExtra("RECIPE")) {
-            Toast.makeText(this, "Invalid recipe", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid preview", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+        preview = (RecipePreview) i.getSerializableExtra("RECIPE");
 
-        recipe = (RecipePreview) i.getSerializableExtra("RECIPE");
-
-        // Set the name and image of the recipe
-        TextView recipeName = findViewById(R.id.ingr_name);
-        recipeName.setText(recipe.getName());
-
-        ImageView recipeImg = findViewById(R.id.ingr_img);
-        Picasso.get().load(recipe.getImgURL())
-                .resize(300,300).centerCrop().into(recipeImg);
+        // Set the favourite button
+        ImageButton favButton = findViewById(R.id.favourite_button);
+        BookmarkManager bookmarkManager = new BookmarkManager(RecipeActivity.this);
+        bookmarkManager.initializeFavoriteButton(favButton, preview);
 
         // Set up the ingredient list
         ingredientList = findViewById(R.id.ingredientList);
@@ -63,21 +61,50 @@ public class RecipeActivity extends AppCompatActivity {
         ingredientList.setNestedScrollingEnabled(false);
         ingredientList.setVisibility(View.INVISIBLE);
 
-        getRecipe();
+        TextView recipeName = findViewById(R.id.ingr_name);
+        recipeName.setText(preview.name);
+
+        ImageView recipeImg = findViewById(R.id.ingr_img);
+        Picasso.get().load(preview.imgURL)
+                .resize(300,300).centerCrop().into(recipeImg);
+
+        boolean isLoaded = i.getBooleanExtra("LOADED", false);
+
+        if (isLoaded) {
+            Recipe recipe;
+            try (RecipeDatabase recipeDB = new RecipeDatabase(RecipeActivity.this)) {
+                recipe = recipeDB.getRecipe(preview.recipeId);
+            }
+
+            TextView recipeDesc = findViewById(R.id.recipeDesc);
+            recipeDesc.setText(recipe.description);
+
+            TextView instructionText = findViewById(R.id.instructionText);
+            instructionText.setText(recipe.instruction);
+
+            // Set the ingredients
+            IngredientAdapter adapter = new IngredientAdapter(recipe.ingredients);
+            ingredientList.setAdapter(adapter);
+            ingredientList.setVisibility(View.VISIBLE);
+        }
+        else {
+            getRecipe();
+        }
     }
 
-    public static Intent newIntent(Context packageContext, RecipePreview preview){
+    public static Intent newIntent(Context packageContext, RecipePreview preview, boolean isLoaded){
         Intent i = new Intent(packageContext, RecipeActivity.class);
         i.putExtra("RECIPE", preview);
+        i.putExtra("LOADED", isLoaded);
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return i;
     }
 
-    // Get the recipe
+    // Get the preview
     private void getRecipe() {
-        recipeDAO = RecipeDAO.getInstance(this);
+        RecipeRepository recipeDAO = new RecipeRepository(RecipeActivity.this);
 
-        recipeDAO.getFullRecipe(recipe.getId(), new ResponseListener<Recipe>() {
+        recipeDAO.getFullRecipe(preview.recipeId, new ResponseListener<Recipe>() {
             @Override
             public void onError(String message) {
                 Toast.makeText(RecipeActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -85,15 +112,15 @@ public class RecipeActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Recipe recipe) {
-                // Set the recipe description and instructions
+                // Set the preview description and instructions
                 TextView recipeDesc = findViewById(R.id.recipeDesc);
-                recipeDesc.setText(recipe.getDescription());
+                recipeDesc.setText(recipe.description);
 
                 TextView instructionText = findViewById(R.id.instructionText);
-                instructionText.setText(recipe.getInstruction());
+                instructionText.setText(recipe.instruction);
 
                 // Set the ingredients
-                IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients());
+                IngredientAdapter adapter = new IngredientAdapter(recipe.ingredients);
                 ingredientList.setAdapter(adapter);
                 ingredientList.setVisibility(View.VISIBLE);
             }

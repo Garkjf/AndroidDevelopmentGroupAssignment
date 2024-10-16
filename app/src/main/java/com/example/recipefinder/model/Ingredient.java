@@ -19,4 +19,8 @@ public class Ingredient {
     public String toString() {
         return measure+" "+name;
     }
+
+    public String toArrayString() {
+        return measure+"-"+name;
+    }
 }

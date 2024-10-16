@@ -7,41 +7,22 @@ import java.util.List;
  * Class representing the full recipe
  */
 public class Recipe {
-    private final String instruction, description;
-    private final List<Ingredient> ingredients = new ArrayList<>();
+    public int recipeID;
+    public String recipeName, imgURL, instruction, description;
+    public List<Ingredient> ingredients = new ArrayList<>();
 
     /**
      * Constructor for Recipe
+     * @param preview Recipe preview
      * @param description Recipe description
      * @param instruction Recipe instruction
      */
-    public Recipe(String description, String instruction) {
+    public Recipe(RecipePreview preview, String description, String instruction) {
+        this.recipeID = preview.recipeId;
+        this.recipeName = preview.name;
+        this.imgURL = preview.imgURL;
         this.description = description;
         this.instruction = instruction;
-    }
-
-    /**
-     * Returns the instruction
-     * @return Instruction
-     */
-    public String getInstruction() {
-        return instruction;
-    }
-
-    /**
-     * Returns the description
-     * @return Description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Returns the ingredients
-     * @return Ingredients
-     */
-    public List<Ingredient> getIngredients() {
-        return ingredients;
     }
 
     /**
