@@ -18,8 +18,6 @@ import com.example.recipefinder.ui.SettingsFragment;
 import com.example.recipefinder.ui.ShoppingListFragment;
 
 public class MainActivity extends AppCompatActivity {
-    ActivityMainBinding binding;
-
     private HomeFragment homeFragment;
     private FavouritesFragment favouritesFragment;
     private ShoppingListFragment shoppingListFragment;
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

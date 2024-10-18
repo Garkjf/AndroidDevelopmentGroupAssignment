@@ -1,5 +1,6 @@
 package com.example.recipefinder.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,13 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     @Override
     public int getItemCount() {
         return ingredients.size();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients.clear();
+        this.ingredients.addAll(ingredients);
+        notifyDataSetChanged();
     }
 
     /**

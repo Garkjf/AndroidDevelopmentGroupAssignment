@@ -32,7 +32,7 @@ public class BookmarkManager {
         HashSet<Integer> favourites = dbHelper.getAllRecipesID();
 
         // Set the button's background based on the current favorite status
-        if (favourites.contains(recipe.recipeId)) {
+        if (favourites.contains(recipe.getRecipeId())) {
             favButton.setBackgroundResource(R.drawable.baseline_bookmark_24); // Filled bookmark
         } else {
             favButton.setBackgroundResource(R.drawable.baseline_bookmark_border_24); // Outline bookmark
@@ -50,15 +50,16 @@ public class BookmarkManager {
      */
     private void toggleFavorite(ImageButton favButton, RecipePreview recipe) {
         HashSet<Integer> favourites = dbHelper.getAllRecipesID();
+        int recipeID = recipe.getRecipeId();
 
-        if (favourites.contains(recipe.recipeId)) {
+        if (favourites.contains(recipeID)) {
             // Remove from favorites
-            dbHelper.deleteRecipe(recipe.recipeId);
+            dbHelper.deleteRecipe(recipeID);
             Toast.makeText(context, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
             favButton.setBackgroundResource(R.drawable.baseline_bookmark_border_24);
         } else {
             // Add to favorites
-            fetchRecipeByID(recipe.recipeId);
+            fetchRecipeByID(recipeID);
             favButton.setBackgroundResource(R.drawable.baseline_bookmark_24);
         }
     }

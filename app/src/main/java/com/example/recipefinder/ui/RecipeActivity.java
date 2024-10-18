@@ -62,10 +62,10 @@ public class RecipeActivity extends AppCompatActivity {
         ingredientList.setVisibility(View.INVISIBLE);
 
         TextView recipeName = findViewById(R.id.ingr_name);
-        recipeName.setText(preview.name);
+        recipeName.setText(preview.getName());
 
         ImageView recipeImg = findViewById(R.id.ingr_img);
-        Picasso.get().load(preview.imgURL)
+        Picasso.get().load(preview.getImgURL())
                 .resize(300,300).centerCrop().into(recipeImg);
 
         boolean isLoaded = i.getBooleanExtra("LOADED", false);
@@ -73,19 +73,23 @@ public class RecipeActivity extends AppCompatActivity {
         if (isLoaded) {
             Recipe recipe;
             try (RecipeDatabase recipeDB = new RecipeDatabase(RecipeActivity.this)) {
-                recipe = recipeDB.getRecipe(preview.recipeId);
+                recipe = recipeDB.getRecipe(preview.getRecipeId());
             }
 
-            TextView recipeDesc = findViewById(R.id.recipeDesc);
-            recipeDesc.setText(recipe.description);
+            if (recipe == null) {
+                Toast.makeText(this, "Recipe not found.", Toast.LENGTH_SHORT).show();
+            } else {
+                TextView recipeDesc = findViewById(R.id.recipeDesc);
+                recipeDesc.setText(recipe.getDescription());
 
-            TextView instructionText = findViewById(R.id.instructionText);
-            instructionText.setText(recipe.instruction);
+                TextView instructionText = findViewById(R.id.instructionText);
+                instructionText.setText(recipe.getInstruction());
 
-            // Set the ingredients
-            IngredientAdapter adapter = new IngredientAdapter(recipe.ingredients);
-            ingredientList.setAdapter(adapter);
-            ingredientList.setVisibility(View.VISIBLE);
+                // Set the ingredients
+                IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients());
+                ingredientList.setAdapter(adapter);
+                ingredientList.setVisibility(View.VISIBLE);
+            }
         }
         else {
             getRecipe();
@@ -104,7 +108,7 @@ public class RecipeActivity extends AppCompatActivity {
     private void getRecipe() {
         RecipeRepository recipeDAO = new RecipeRepository(RecipeActivity.this);
 
-        recipeDAO.getFullRecipe(preview.recipeId, new ResponseListener<Recipe>() {
+        recipeDAO.getFullRecipe(preview.getRecipeId(), new ResponseListener<Recipe>() {
             @Override
             public void onError(String message) {
                 Toast.makeText(RecipeActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -114,13 +118,13 @@ public class RecipeActivity extends AppCompatActivity {
             public void onResponse(Recipe recipe) {
                 // Set the preview description and instructions
                 TextView recipeDesc = findViewById(R.id.recipeDesc);
-                recipeDesc.setText(recipe.description);
+                recipeDesc.setText(recipe.getDescription());
 
                 TextView instructionText = findViewById(R.id.instructionText);
-                instructionText.setText(recipe.instruction);
+                instructionText.setText(recipe.getInstruction());
 
                 // Set the ingredients
-                IngredientAdapter adapter = new IngredientAdapter(recipe.ingredients);
+                IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients());
                 ingredientList.setAdapter(adapter);
                 ingredientList.setVisibility(View.VISIBLE);
             }

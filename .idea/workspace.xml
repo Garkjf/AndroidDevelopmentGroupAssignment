@@ -66,9 +66,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aec91412-9632-4e18-b440-56ecdcfeec6b" name="Changes" comment="Added bookmark symbol, changed model structure and loading effect.">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/db/RecipeDatabase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/BookmarkManager.java" afterDir="false" />
+    <list default="true" id="aec91412-9632-4e18-b440-56ecdcfeec6b" name="Changes" comment="Implemented bookmark feature and favourites page.">
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/sha1-checksums.bin" afterDir="false" />
@@ -99,20 +97,20 @@
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/adapter/IngredientAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/adapter/IngredientAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/adapter/RecipeAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/adapter/RecipeAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/api/RecipeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/api/RecipeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/db/RecipeDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/db/RecipeDatabase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/Ingredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/Ingredient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/Recipe.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/RecipePreview.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/RecipePreview.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/FavouritesFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/FavouritesFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/HomeFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/HomeFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/RecipeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/RecipeActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/SearchResultActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/SearchResultActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/JSONConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/JSONConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_recipe.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_recipe.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/ShoppingListFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/ShoppingListFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/BookmarkManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/BookmarkManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_favourites.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_favourites.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_shopping_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_shopping_list.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/ingredient_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/ingredient_item.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,6 +209,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Android App.app.executor&quot;: &quot;Run&quot;,
+    &quot;PROJECT_TRUSTED_KEY&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
@@ -228,6 +227,8 @@
   },
   &quot;keyToStringList&quot;: {
     &quot;com.android.tools.idea.sqlite.queryhistory&quot;: [
+      &quot;select * from ingredients where recipe_id = 52773&quot;,
+      &quot;SELECT ingredients from favourites&quot;,
       &quot;SELECT * FROM favourites&quot;
     ],
     &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
@@ -415,7 +416,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728107301858</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Implemented bookmark feature and favourites page.">
+      <option name="closed" value="true" />
+      <created>1729070275976</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1729070275976</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -441,6 +450,7 @@
     <MESSAGE value="Solved: Random recipe, Updated search result page" />
     <MESSAGE value="Added bottom navigation bar, stored categories and areas in strings.xml" />
     <MESSAGE value="Added bookmark symbol, changed model structure and loading effect." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added bookmark symbol, changed model structure and loading effect." />
+    <MESSAGE value="Implemented bookmark feature and favourites page." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented bookmark feature and favourites page." />
   </component>
 </project>

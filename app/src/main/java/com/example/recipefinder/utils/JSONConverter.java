@@ -42,8 +42,7 @@ public class JSONConverter {
      * @return A Recipe object
      * @throws JSONException If JSON response is malformed
      */
-    public static Recipe getFullRecipe(JSONObject response)
-            throws JSONException {
+    public static Recipe getFullRecipe(JSONObject response) throws JSONException {
         JSONObject recipeItem = response.getJSONArray("meals").getJSONObject(0);
         String instructions = recipeItem.getString("strInstructions");
         String desc = String.format("%s, %s", recipeItem.getString("strCategory"),

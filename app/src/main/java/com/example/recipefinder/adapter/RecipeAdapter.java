@@ -80,9 +80,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipePreview listItem = recipes.get(position);
-        holder.recipeTitle.setText(listItem.name);
+        holder.recipeTitle.setText(listItem.getName());
 
-        Picasso.get().load(listItem.imgURL+"/preview").resize(300, 300)
+        Picasso.get().load(listItem.getImgURL()+"/preview").resize(300, 300)
                 .centerCrop().placeholder(R.drawable.ic_recipe).into(holder.recipeImg);
 
         ImageButton favButton = holder.favButton;

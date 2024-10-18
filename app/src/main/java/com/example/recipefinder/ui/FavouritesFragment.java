@@ -21,11 +21,18 @@ import java.util.List;
 public class FavouritesFragment extends Fragment {
     private RecipeAdapter adapter;
 
-    public FavouritesFragment() {}
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        List<RecipePreview> recipes;
+        try (RecipeDatabase recipeDB = new RecipeDatabase(getActivity())) {
+            recipes = recipeDB.getRecipePreviews();
+        }
+        adapter = new RecipeAdapter(recipes);
+        adapter.setOnClickListener(item -> {
+            Intent intent = RecipeActivity.newIntent(getActivity(), item, true);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -35,20 +42,7 @@ public class FavouritesFragment extends Fragment {
 
         RecyclerView favouritesView = view.findViewById(R.id.favouritesView);
         favouritesView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        List<RecipePreview> recipes;
-        try (RecipeDatabase recipeDB = new RecipeDatabase(getActivity())) {
-            recipes = recipeDB.getRecipePreviews();
-        }
-
-        // Initialize the adapter with the fetched recipes
-        RecipeAdapter adapter = new RecipeAdapter(recipes);
         favouritesView.setAdapter(adapter);
-        adapter.setOnClickListener(item -> {
-            Intent intent = RecipeActivity.newIntent(getActivity(), item, true);
-            startActivity(intent);
-        });
-        this.adapter = adapter;
 
         return view;
     }

@@ -34,15 +34,17 @@ public class HomeFragment extends Fragment {
     private RecyclerView recipeView;
     private RecipePreview randomRecipe = new RecipePreview(0, "", "");
 
-    View view;
-    FlexboxLayout areaLayout, categoryLayout;
-    ShimmerFrameLayout shimmerLayout;
-
-    public HomeFragment(){}
+    private View view;
+    private FlexboxLayout areaLayout, categoryLayout;
+    private ShimmerFrameLayout shimmerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            randomRecipe = (RecipePreview) savedInstanceState.getSerializable("RECIPE");
+        }
+        recipeRepo = new RecipeRepository(requireActivity());
     }
 
     @Override
@@ -58,12 +60,7 @@ public class HomeFragment extends Fragment {
         areaLayout = view.findViewById(R.id.areaLayout);
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
 
-        if (savedInstanceState != null) {
-            randomRecipe = (RecipePreview) savedInstanceState.getSerializable("RECIPE");
-        }
         setupSearchBar();
-
-        recipeRepo = new RecipeRepository(requireActivity());
 
         loadRandomRecipe();
         loadCategories();
@@ -130,7 +127,7 @@ public class HomeFragment extends Fragment {
     // Random recipe functions
     private void loadRandomRecipe() {
         shimmerLayout.setVisibility(View.GONE);
-        if (randomRecipe.recipeId != 0) {
+        if (randomRecipe.getRecipeId() != 0) {
             displayRandomRecipe();
             return;
         }

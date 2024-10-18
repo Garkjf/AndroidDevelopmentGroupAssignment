@@ -14,13 +14,13 @@ public class Ingredient {
         return name;
     }
 
+    public String getMeasure() {
+        return measure;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return measure+" "+name;
-    }
-
-    public String toArrayString() {
-        return measure+"-"+name;
     }
 }
