@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.example.recipefinder.model.Ingredient;
 import com.example.recipefinder.model.Recipe;
@@ -66,7 +65,7 @@ public class RecipeDatabase extends SQLiteOpenHelper  {
         onCreate(db);
     }
 
-    // Method to add a recipe to the database
+    // Add a recipe to the database
     public void addRecipe(Recipe recipe) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues recipeValues = new ContentValues();
@@ -88,20 +87,7 @@ public class RecipeDatabase extends SQLiteOpenHelper  {
         db.close();
     }
 
-    private Recipe getRecipeFromCursor(Cursor cursor) {
-        RecipePreview preview = new RecipePreview(
-                cursor.getInt(0),   // Recipe ID
-                cursor.getString(1), // Recipe Name
-                cursor.getString(2)  // Recipe Image URL
-        );
-
-        return new Recipe(
-                preview,
-                cursor.getString(3), // Recipe Description
-                cursor.getString(4)  // Recipe Instructions
-        );
-    }
-
+    // Get list of RecipePreviews from the database
     public List<RecipePreview> getRecipePreviews() {
         List<RecipePreview> returnList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -123,46 +109,82 @@ public class RecipeDatabase extends SQLiteOpenHelper  {
         return returnList;
     }
 
+    // Get a recipe from the database
     public Recipe getRecipe(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Recipe recipe = null;
+        Recipe recipe;
         Cursor cursor = null;
 
         try {
-            String recipeQuery = String.format("SELECT * FROM %s WHERE %s = ?",
-                    TABLE_FAVOURITES, RECIPE_ID);
-            cursor = db.rawQuery(recipeQuery, new String[]{String.valueOf(id)});
+            // Query for recipe and ingredients in a single JOIN query
+            String query = String.format(
+                "SELECT f.*, i.%s, i.%s FROM %s f LEFT JOIN %s i ON f.%s = i.%s WHERE f.%s = ?",
+                INGREDIENT_NAME, INGREDIENT_MEASURE, TABLE_FAVOURITES, TABLE_INGREDIENTS,
+                RECIPE_ID, RECIPE_ID, RECIPE_ID
+            );
 
-            if (cursor != null && cursor.moveToFirst()) {
-                recipe = getRecipeFromCursor(cursor);
-                Log.d("RECIPE_ACTIVITY", recipe.getRecipeID()+" "+recipe.getRecipeName());
+            cursor = db.rawQuery(query, new String[]{String.valueOf(id)});
+            if (!cursor.moveToFirst()) return null;
 
-                cursor.close();
+            recipe = new Recipe(
+                cursor.getInt(0),    // Recipe ID
+                cursor.getString(1),  // Recipe Name
+                cursor.getString(2),  // Recipe Image URL
+                cursor.getString(3),  // Recipe Description
+                cursor.getString(4)   // Recipe Instructions
+            );
 
-                // Query to get the ingredients for the recipe
-                String ingredientsQuery = String.format("SELECT * FROM %s WHERE %s = ?",
-                        TABLE_INGREDIENTS, RECIPE_ID);
-                cursor = db.rawQuery(ingredientsQuery, new String[]{String.valueOf(id)});
+            do {
+                String ingredientName = cursor.getString(5);
+                String ingredientMeasure = cursor.getString(6);
 
-                if (cursor != null && cursor.moveToFirst()) {
-                    do {
-                        // Adjust the indices based on your table structure
-                        String ingredientName = cursor.getString(2);
-                        String ingredientQuantity = cursor.getString(3);
-                        Log.d("RECIPE_ACTIVITY", "Ingredient: " + ingredientName + " Quantity: " + ingredientQuantity);
-                        recipe.addIngredient(ingredientName, ingredientQuantity);
-                    } while (cursor.moveToNext());
+                if (ingredientName != null && ingredientMeasure != null) {
+                    recipe.addIngredient(ingredientName, ingredientMeasure);
                 }
-            }
+            } while (cursor.moveToNext());
+
         } finally {
-            if (cursor != null) cursor.close(); // Always close cursor if it's not null
-            db.close(); // Close database connection
+            if (cursor != null) cursor.close();
+            db.close();
         }
 
         return recipe;
-
     }
 
+    // Get a list of ingredients from the database
+    public List<Ingredient> getIngredients(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        List<Ingredient> ingredients = new ArrayList<>();
+
+        try {
+            // Query for recipe and ingredients in a single JOIN query
+            String query = String.format(
+                    "SELECT %s, %s FROM %s WHERE %s = ?",
+                    INGREDIENT_NAME, INGREDIENT_MEASURE, TABLE_INGREDIENTS, RECIPE_ID
+            );
+
+            cursor = db.rawQuery(query, new String[]{String.valueOf(id)});
+            if (!cursor.moveToFirst()) return null;
+
+            do {
+                String ingredientName = cursor.getString(0);
+                String ingredientMeasure = cursor.getString(1);
+
+                if (ingredientName != null && ingredientMeasure != null) {
+                    ingredients.add(new Ingredient(ingredientName, ingredientMeasure));
+                }
+            } while (cursor.moveToNext());
+
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return ingredients;
+    }
+
+    // Get a list of recipe IDs from the database
     public HashSet<Integer> getAllRecipesID() {
         HashSet<Integer> returnSet = new HashSet<>();
         String queryString = String.format("SELECT %s FROM %s", RECIPE_ID, TABLE_FAVOURITES);
@@ -178,6 +200,7 @@ public class RecipeDatabase extends SQLiteOpenHelper  {
         return returnSet;
     }
 
+    // Delete a recipe from the database
     public void deleteRecipe(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_FAVOURITES, RECIPE_ID + " = ?", new String[]{String.valueOf(id)});

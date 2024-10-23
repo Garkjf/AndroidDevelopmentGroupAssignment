@@ -17,37 +17,26 @@ public class BookmarkManager {
     private final RecipeDatabase dbHelper;
     private final Context context;
 
+    // Constructor
     public BookmarkManager(Context context) {
         dbHelper = new RecipeDatabase(context);
         this.context = context;
     }
 
-    /**
-     * Initializes the favorite button based on the recipe's favorite status.
-     *
-     * @param favButton   The button to toggle favorite status.
-     * @param recipe      The recipe to check.
-     */
+    // Initializes the favorite button based on the recipe's favorite status.
     public void initializeFavoriteButton(ImageButton favButton, RecipePreview recipe) {
         HashSet<Integer> favourites = dbHelper.getAllRecipesID();
 
         // Set the button's background based on the current favorite status
-        if (favourites.contains(recipe.getRecipeId())) {
-            favButton.setBackgroundResource(R.drawable.baseline_bookmark_24); // Filled bookmark
-        } else {
-            favButton.setBackgroundResource(R.drawable.baseline_bookmark_border_24); // Outline bookmark
-        }
+        favButton.setBackgroundResource(favourites.contains(recipe.getRecipeId())
+                ? R.drawable.baseline_bookmark_24
+                : R.drawable.baseline_bookmark_border_24);
 
         // Set up click listener for the favorite button
         favButton.setOnClickListener(v -> toggleFavorite(favButton, recipe));
     }
 
-    /**
-     * Toggles the favorite status of the recipe.
-     *
-     * @param favButton   The button to toggle favorite status.
-     * @param recipe      The recipe to toggle.
-     */
+    // Toggles the favorite status of the recipe.
     private void toggleFavorite(ImageButton favButton, RecipePreview recipe) {
         HashSet<Integer> favourites = dbHelper.getAllRecipesID();
         int recipeID = recipe.getRecipeId();
@@ -64,6 +53,7 @@ public class BookmarkManager {
         }
     }
 
+    // Fetches the full recipe from the API and adds it to the database.
     private void fetchRecipeByID(int recipeId) {
         RecipeRepository recipeDAO = new RecipeRepository(context);
 

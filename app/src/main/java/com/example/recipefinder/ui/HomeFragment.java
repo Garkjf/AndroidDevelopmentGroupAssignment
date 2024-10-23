@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +33,8 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private RecipeRepository recipeRepo;
     private RecyclerView recipeView;
-    private RecipePreview randomRecipe = new RecipePreview(0, "", "");
+    private RecipePreview randomRecipe = null;
+    private FragmentActivity context;
 
     private View view;
     private FlexboxLayout areaLayout, categoryLayout;
@@ -44,7 +46,8 @@ public class HomeFragment extends Fragment {
         if (savedInstanceState != null) {
             randomRecipe = (RecipePreview) savedInstanceState.getSerializable("RECIPE");
         }
-        recipeRepo = new RecipeRepository(requireActivity());
+        context = requireActivity();
+        recipeRepo = new RecipeRepository(context);
     }
 
     @Override
@@ -54,7 +57,7 @@ public class HomeFragment extends Fragment {
 
         recipeView = view.findViewById(R.id.recipeView);
         recipeView.setHasFixedSize(true);
-        recipeView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recipeView.setLayoutManager(new LinearLayoutManager(context));
 
         categoryLayout = view.findViewById(R.id.categoryLayout);
         areaLayout = view.findViewById(R.id.areaLayout);
@@ -69,6 +72,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    // Setup the search bar to find recipes
     private void setupSearchBar() {
         SearchView searchBar = view.findViewById(R.id.searchBar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -77,7 +81,7 @@ public class HomeFragment extends Fragment {
                 String searchTerm = query.toLowerCase();
 
                 if (searchTerm.isEmpty()) {
-                    Toast.makeText(getActivity(), "Please enter search term",
+                    Toast.makeText(context, "Please enter search term",
                             Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -98,21 +102,19 @@ public class HomeFragment extends Fragment {
         savedInstanceState.putSerializable("RECIPE", randomRecipe);
     }
 
-    private void showErrorMessage(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-    }
-
+    // Navigate to the search result activity
     private void navigateToSearchResult(SearchType type, String searchQuery) {
-        Intent i = SearchResultActivity.setIntent(getActivity(), type, searchQuery);
+        Intent i = SearchResultActivity.setIntent(context, type, searchQuery);
         startActivity(i);
     }
 
+    // Create a button
     @NonNull
     private Button createButton(String text) {
-        Button button = new Button(getActivity());
+        Button button = new Button(context);
         button.setText(text);
         button.setAllCaps(false);
-        button.setBackground(ContextCompat.getDrawable(requireActivity(), R.drawable.btn_background));
+        button.setBackground(ContextCompat.getDrawable(context, R.drawable.btn_background));
         button.setTextColor(Color.WHITE);
 
         FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
@@ -127,7 +129,7 @@ public class HomeFragment extends Fragment {
     // Random recipe functions
     private void loadRandomRecipe() {
         shimmerLayout.setVisibility(View.GONE);
-        if (randomRecipe.getRecipeId() != 0) {
+        if (randomRecipe != null) {
             displayRandomRecipe();
             return;
         }
@@ -137,7 +139,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onError(String message) {
                 shimmerLayout.stopShimmer();
-                showErrorMessage(message);
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onResponse(RecipePreview response) {
@@ -150,18 +152,20 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // Display the random recipe
     private void displayRandomRecipe() {
         List<RecipePreview> recipes = new ArrayList<>();
         recipes.add(randomRecipe);
 
         RecipeAdapter adapter = new RecipeAdapter(recipes);
         adapter.setOnClickListener(item -> {
-            Intent intent = RecipeActivity.newIntent(getActivity(), item, false);
+            Intent intent = RecipeActivity.newAPIIntent(context, item);
             startActivity(intent);
         });
         recipeView.setAdapter(adapter);
     }
 
+    // Category and area functions
     private void loadCategories() {
         String[] categories = getResources().getStringArray(R.array.categories);
 

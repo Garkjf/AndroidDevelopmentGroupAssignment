@@ -1,93 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_marginTop="40dp"
-    android:layout_marginStart="12dp"
-    android:layout_marginEnd="12dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:id="@+id/main">
 
-    <TextView
-        android:id="@+id/ingr_name"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:padding="16dp">
 
-    <ImageButton
-        android:id="@+id/favourite_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="start"
-        android:background="@drawable/baseline_bookmark_border_24"
-        android:contentDescription="@string/favourite_button"
-        tools:ignore="RedundantDescriptionCheck,TouchTargetSizeCheck" />
+        <!-- Recipe Header Section -->
+        <TextView
+            android:id="@+id/recipe_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/favourite_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ingr_img"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
-        android:contentDescription="@string/recipe_picture"
-        tools:ignore="ImageContrastCheck"
-        tools:srcCompat="@tools:sample/avatars" />
+        <ImageButton
+            android:id="@+id/favourite_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_bookmark_border_24"
+            android:contentDescription="@string/favourite_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RedundantDescriptionCheck,TouchTargetSizeCheck" />
 
-    <TextView
-        android:id="@+id/recipeDesc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <ImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/recipe_picture"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recipe_name" />
 
-    <LinearLayout
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical"
-        tools:context=".ui.RecipeActivity">
+        <TextView
+            android:id="@+id/recipe_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintTop_toBottomOf="@id/recipe_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:ignore="UselessParent">
+        <!-- Ingredients and Instructions Section -->
+        <TextView
+            android:id="@+id/ingredients_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/ingredients"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recipe_description" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ingredientList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ingredients_title"
+            android:nestedScrollingEnabled="false" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/ingredients"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        <TextView
+            android:id="@+id/instructions_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/instructions"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ingredientList" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/ingredientList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp" />
+        <TextView
+            android:id="@+id/instruction_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructions_title" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/instructions"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/instructionText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:ellipsize="end"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

@@ -10,16 +10,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class to convert JSON response into objects
- */
 public class JSONConverter {
-    /**
-     * Returns a list of RecipePreview objects from the JSON response
-     * @param response JSON response from API
-     * @return A list of RecipePreview objects for search result
-     * @throws JSONException If JSON response is malformed
-     */
+    // Returns a list of RecipePreview objects
     public static List<RecipePreview> getRecipes(JSONObject response) throws JSONException {
         JSONArray recipesArray = response.getJSONArray("meals");
         List<RecipePreview> recipes = new ArrayList<>();
@@ -36,22 +28,16 @@ public class JSONConverter {
         return recipes;
     }
 
-    /**
-     * Returns a Recipe object based on the response.
-     * @param response JSON response from API
-     * @return A Recipe object
-     * @throws JSONException If JSON response is malformed
-     */
+    // Returns a Recipe object based on the response.
     public static Recipe getFullRecipe(JSONObject response) throws JSONException {
         JSONObject recipeItem = response.getJSONArray("meals").getJSONObject(0);
         String instructions = recipeItem.getString("strInstructions");
         String desc = String.format("%s, %s", recipeItem.getString("strCategory"),
                 recipeItem.getString("strArea"));
 
-        RecipePreview preview = new RecipePreview(recipeItem.getInt("idMeal"),
+        Recipe recipe = new Recipe(recipeItem.getInt("idMeal"),
                 recipeItem.getString("strMeal"),
-                recipeItem.getString("strMealThumb"));
-        Recipe recipe = new Recipe(preview, desc, instructions);
+                recipeItem.getString("strMealThumb"), desc, instructions);
 
         for (int i = 1; i <= 20; i++) {
             String ingredient = recipeItem.getString("strIngredient"+i).trim();

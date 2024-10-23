@@ -11,21 +11,17 @@ public class Recipe {
     private final String recipeName, imgURL, instruction, description;
     private final List<Ingredient> ingredients = new ArrayList<>();
 
-    /**
-     * Constructor for Recipe
-     * @param preview Recipe preview
-     * @param description Recipe description
-     * @param instruction Recipe instruction
-     */
-    public Recipe(RecipePreview preview, String description, String instruction) {
-        this.recipeID = preview.getRecipeId();
-        this.recipeName = preview.getName();
-        this.imgURL = preview.getImgURL();
+    // Constructor
+    public Recipe(int recipeID, String recipeName, String imgURL,
+                  String description, String instruction) {
+        this.recipeID = recipeID;
+        this.recipeName = recipeName;
+        this.imgURL = imgURL;
         this.description = description;
         this.instruction = instruction;
     }
 
-
+    // Getters
     public int getRecipeID() {
         return recipeID;
     }
@@ -50,11 +46,7 @@ public class Recipe {
         return ingredients;
     }
 
-    /**
-     * Adds an ingredient to the recipe
-     * @param ingredient Ingredient name
-     * @param measure Measure of the ingredient
-     */
+    // Adds an ingredient to the recipe
     public void addIngredient(String ingredient, String measure) {
         this.ingredients.add(new Ingredient(ingredient, measure));
     }

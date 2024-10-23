@@ -48,6 +48,7 @@ public class RecipeActivity extends AppCompatActivity {
             finish();
             return;
         }
+
         preview = (RecipePreview) i.getSerializableExtra("RECIPE");
 
         // Set the favourite button
@@ -61,53 +62,40 @@ public class RecipeActivity extends AppCompatActivity {
         ingredientList.setNestedScrollingEnabled(false);
         ingredientList.setVisibility(View.INVISIBLE);
 
-        TextView recipeName = findViewById(R.id.ingr_name);
+        TextView recipeName = findViewById(R.id.recipe_name);
         recipeName.setText(preview.getName());
 
-        ImageView recipeImg = findViewById(R.id.ingr_img);
-        Picasso.get().load(preview.getImgURL())
-                .resize(300,300).centerCrop().into(recipeImg);
+        ImageView recipeImg = findViewById(R.id.recipe_image);
+        Picasso.get().load(preview.getImgURL()).resize(300,300)
+                .centerCrop().into(recipeImg);
 
         boolean isLoaded = i.getBooleanExtra("LOADED", false);
-
-        if (isLoaded) {
-            Recipe recipe;
-            try (RecipeDatabase recipeDB = new RecipeDatabase(RecipeActivity.this)) {
-                recipe = recipeDB.getRecipe(preview.getRecipeId());
-            }
-
-            if (recipe == null) {
-                Toast.makeText(this, "Recipe not found.", Toast.LENGTH_SHORT).show();
-            } else {
-                TextView recipeDesc = findViewById(R.id.recipeDesc);
-                recipeDesc.setText(recipe.getDescription());
-
-                TextView instructionText = findViewById(R.id.instructionText);
-                instructionText.setText(recipe.getInstruction());
-
-                // Set the ingredients
-                IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients());
-                ingredientList.setAdapter(adapter);
-                ingredientList.setVisibility(View.VISIBLE);
-            }
-        }
-        else {
-            getRecipe();
-        }
+        if (isLoaded) getRecipeFromDatabase();
+        else getRecipeFromAPI();
     }
 
-    public static Intent newIntent(Context packageContext, RecipePreview preview, boolean isLoaded){
+    // Create an intent to start the activity
+    public static Intent newDBIntent(Context packageContext, RecipePreview preview) {
         Intent i = new Intent(packageContext, RecipeActivity.class);
         i.putExtra("RECIPE", preview);
-        i.putExtra("LOADED", isLoaded);
+        i.putExtra("LOADED", true);
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return i;
     }
 
-    // Get the preview
-    private void getRecipe() {
+    public static Intent newAPIIntent(Context packageContext, RecipePreview preview) {
+        Intent i = new Intent(packageContext, RecipeActivity.class);
+        i.putExtra("RECIPE", preview);
+        i.putExtra("LOADED", false);
+        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        return i;
+    }
+
+    // Get the recipe from the API
+    private void getRecipeFromAPI() {
         RecipeRepository recipeDAO = new RecipeRepository(RecipeActivity.this);
 
+        // Make the asynchronous API call
         recipeDAO.getFullRecipe(preview.getRecipeId(), new ResponseListener<Recipe>() {
             @Override
             public void onError(String message) {
@@ -116,18 +104,36 @@ public class RecipeActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Recipe recipe) {
-                // Set the preview description and instructions
-                TextView recipeDesc = findViewById(R.id.recipeDesc);
-                recipeDesc.setText(recipe.getDescription());
-
-                TextView instructionText = findViewById(R.id.instructionText);
-                instructionText.setText(recipe.getInstruction());
-
-                // Set the ingredients
-                IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients());
-                ingredientList.setAdapter(adapter);
-                ingredientList.setVisibility(View.VISIBLE);
+                setupRecipe(recipe);
             }
         });
+    }
+
+    // Get the recipe from the database
+    private void getRecipeFromDatabase() {
+        Recipe recipe;
+        try (RecipeDatabase recipeDB = new RecipeDatabase(RecipeActivity.this)) {
+            recipe = recipeDB.getRecipe(preview.getRecipeId());
+        }
+
+        if (recipe == null) {
+            Toast.makeText(this, "Recipe not found.", Toast.LENGTH_SHORT).show();
+        } else {
+            setupRecipe(recipe);
+        }
+    }
+
+    // Setup the recipe
+    private void setupRecipe(Recipe recipe) {
+        TextView recipeDesc = findViewById(R.id.recipe_description);
+        recipeDesc.setText(recipe.getDescription());
+
+        TextView instructionText = findViewById(R.id.instruction_text);
+        instructionText.setText(recipe.getInstruction());
+
+        // Set the ingredients
+        IngredientAdapter adapter = new IngredientAdapter(recipe.getIngredients());
+        ingredientList.setAdapter(adapter);
+        ingredientList.setVisibility(View.VISIBLE);
     }
 }

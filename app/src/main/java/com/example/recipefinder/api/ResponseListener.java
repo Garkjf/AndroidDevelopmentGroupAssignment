@@ -1,19 +1,9 @@
 package com.example.recipefinder.api;
 
-/**
- * Interface for response listeners
- * @param <T> Type of response
- */
 public interface ResponseListener<T> {
-    /**
-     * Called when an error occurs
-     * @param message Error message
-     */
+    // Called when an error occurs
     void onError(String message);
 
-    /**
-     * Called when a response is received
-     * @param response The response received
-     */
+    // Called when a response is received
     void onResponse(T response);
 }

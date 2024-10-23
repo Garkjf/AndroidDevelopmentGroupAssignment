@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,17 +21,21 @@ import java.util.List;
 
 public class FavouritesFragment extends Fragment {
     private RecipeAdapter adapter;
+    private FragmentActivity context;
+    private RecipeDatabase recipeDB;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<RecipePreview> recipes;
-        try (RecipeDatabase recipeDB = new RecipeDatabase(getActivity())) {
-            recipes = recipeDB.getRecipePreviews();
-        }
+
+        context = requireActivity();
+        recipeDB = new RecipeDatabase(context);
+
+        List<RecipePreview> recipes = recipeDB.getRecipePreviews();
+
         adapter = new RecipeAdapter(recipes);
         adapter.setOnClickListener(item -> {
-            Intent intent = RecipeActivity.newIntent(getActivity(), item, true);
+            Intent intent = RecipeActivity.newDBIntent(context, item);
             startActivity(intent);
         });
     }
@@ -41,7 +46,7 @@ public class FavouritesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
         RecyclerView favouritesView = view.findViewById(R.id.favouritesView);
-        favouritesView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        favouritesView.setLayoutManager(new LinearLayoutManager(context));
         favouritesView.setAdapter(adapter);
 
         return view;
@@ -52,10 +57,8 @@ public class FavouritesFragment extends Fragment {
         super.onResume();
         // Refresh data when the fragment is visible
         if (adapter != null) {
-            try (RecipeDatabase recipeDB = new RecipeDatabase(getActivity())) {
-                List<RecipePreview> recipes = recipeDB.getRecipePreviews();
-                adapter.updateRecipes(recipes);
-            }
+            List<RecipePreview> recipes = recipeDB.getRecipePreviews();
+            adapter.updateRecipes(recipes);
         }
     }
 }

@@ -6,12 +6,14 @@ public class RecipePreview implements Serializable {
     private final int recipeId;
     private final String name, imgURL;
 
+    // Constructor
     public RecipePreview(int recipeId, String name, String imgURL) {
         this.name = name;
         this.imgURL = imgURL;
         this.recipeId = recipeId;
     }
 
+    // Getters
     public String getImgURL() {
         return imgURL;
     }

@@ -67,6 +67,7 @@ public class SearchResultActivity extends AppCompatActivity {
         handleSearch(type, searchTerm);
     }
 
+    // Handle different search types
     private void handleSearch(SearchType type, String searchTerm) {
         RecipeSearchHandler searchHandler = null;
 
@@ -91,6 +92,7 @@ public class SearchResultActivity extends AppCompatActivity {
         searchRecipes(searchTerm, searchHandler);
     }
 
+    // Create an intent to start the activity
     public static Intent setIntent(Context activity, SearchType searchType, String searchTerm) {
         Intent i = new Intent(activity, SearchResultActivity.class);
         i.putExtra("SEARCH_TYPE", searchType.toString());
@@ -116,8 +118,7 @@ public class SearchResultActivity extends AppCompatActivity {
             @Override
             public void onError(String message) {
                 shimmerLayout.stopShimmer();
-                Toast.makeText(SearchResultActivity.this, message,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchResultActivity.this, message, Toast.LENGTH_SHORT).show();
                 countText.setText("No results found");
             }
 
@@ -137,7 +138,7 @@ public class SearchResultActivity extends AppCompatActivity {
         RecipeAdapter adapter = new RecipeAdapter(recipes);
         countText.setText(String.format("%d results found", recipes.size()));
         adapter.setOnClickListener(item -> {
-            Intent intent = RecipeActivity.newIntent(SearchResultActivity.this, item, false);
+            Intent intent = RecipeActivity.newAPIIntent(SearchResultActivity.this, item);
             startActivity(intent);
         });
         recipeView.setAdapter(adapter);
