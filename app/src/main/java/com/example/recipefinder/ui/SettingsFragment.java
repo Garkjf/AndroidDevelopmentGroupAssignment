@@ -1,26 +1,44 @@
-package com.example.recipefinder.ui;
+package com.example.recipefinder2.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import com.example.recipefinder.R;
+import com.example.recipefinder2.MainActivity;
+import com.example.recipefinder2.R;
 
 public class SettingsFragment extends Fragment {
+
     public SettingsFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        
+        Button changeUserDetailsButton = view.findViewById(R.id.btn_change_user_details);
+        Button logoutButton = view.findViewById(R.id.btn_logout);
+
+        // Handle "Change User Details" button click
+        changeUserDetailsButton.setOnClickListener(v -> {
+            // TODO: Implement user details change functionality
+            // For now, it just shows a placeholder action
+            // You may start a new activity or open a dialog for changing details
+        });
+        
+        logoutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        });
+
+        return view;
     }
 }
