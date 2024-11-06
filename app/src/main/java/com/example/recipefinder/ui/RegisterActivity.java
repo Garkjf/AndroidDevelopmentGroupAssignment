@@ -1,45 +1,76 @@
-package com.example.recipefinder2.ui;
+package com.example.recipefinder.ui;
 
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.recipefinder2.R;
-import com.example.recipefinder2.databinding.ActivityRegisterBinding;
+
+import com.example.recipefinder.R;
+import com.example.recipefinder.db.UserDAO;
+import com.example.recipefinder.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
-
-    private ActivityRegisterBinding binding;
+    private UserDAO userDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_register);
 
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        userDAO = new UserDAO(this);
 
-        // Set up the register button click listener
-        binding.registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Get user inputs
-                String username = binding.username.getText().toString();
-                String email = binding.email.getText().toString();
-                String password = binding.password.getText().toString();
-                String confirmPassword = binding.confirmPassword.getText().toString();
+        Button registerButton = findViewById(R.id.registerButton);
+        TextView usernameField = findViewById(R.id.username);
+        TextView emailField = findViewById(R.id.email);
+        TextView passwordField = findViewById(R.id.password);
+        TextView confirmPasswordField = findViewById(R.id.confirmPassword);
 
-                // Validate the inputs
-                if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                } else if (!password.equals(confirmPassword)) {
-                    Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Proceed with registration (e.g., save data to database, etc.)
-                    Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                    // You may want to finish this activity and return to the login screen or go to the next activity
-                    finish(); // Close RegisterActivity
-                }
+        registerButton.setOnClickListener(view -> {
+            // Get user inputs
+            String username = usernameField.getText().toString();
+            String email = emailField.getText().toString();
+            String password = passwordField.getText().toString();
+            String confirmPassword = confirmPasswordField.getText().toString();
+
+            // Validate the inputs
+            if (validateInputs(username, email, password, confirmPassword)) {
+                // Add the user to the database
+                userDAO.addUser(new User(username, email, password));
+                // Proceed with registration (e.g., save data to database, etc.)
+                Toast.makeText(RegisterActivity.this, "Registration Successful!",
+                        Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
+    }
+
+    private boolean validateInputs(String username, String email, String password,
+                                   String confirmPassword) {
+        boolean isIncomplete = username.isEmpty() || email.isEmpty() ||
+                password.isEmpty() || confirmPassword.isEmpty();
+
+        if (isIncomplete) {
+            Toast.makeText(RegisterActivity.this, "Please fill in all fields",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(RegisterActivity.this, "Passwords do not match",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (userDAO.getUser(username) != null) {
+            Toast.makeText(RegisterActivity.this, "User already exists",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }

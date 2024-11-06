@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.recipefinder.R;
 import com.example.recipefinder.adapter.RecipeAdapter;
-import com.example.recipefinder.db.RecipeDatabase;
+import com.example.recipefinder.db.RecipeDAO;
 import com.example.recipefinder.model.RecipePreview;
 
 import java.util.List;
@@ -22,16 +22,16 @@ import java.util.List;
 public class FavouritesFragment extends Fragment {
     private RecipeAdapter adapter;
     private FragmentActivity context;
-    private RecipeDatabase recipeDB;
+    private RecipeDAO recipeDAO;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         context = requireActivity();
-        recipeDB = new RecipeDatabase(context);
+        recipeDAO = new RecipeDAO(context);
 
-        List<RecipePreview> recipes = recipeDB.getRecipePreviews();
+        List<RecipePreview> recipes = recipeDAO.getRecipePreviews();
 
         adapter = new RecipeAdapter(recipes);
         adapter.setOnClickListener(item -> {
@@ -57,7 +57,7 @@ public class FavouritesFragment extends Fragment {
         super.onResume();
         // Refresh data when the fragment is visible
         if (adapter != null) {
-            List<RecipePreview> recipes = recipeDB.getRecipePreviews();
+            List<RecipePreview> recipes = recipeDAO.getRecipePreviews();
             adapter.updateRecipes(recipes);
         }
     }

@@ -35,7 +35,7 @@ public class JSONConverter {
         String desc = String.format("%s, %s", recipeItem.getString("strCategory"),
                 recipeItem.getString("strArea"));
 
-        Recipe recipe = new Recipe(recipeItem.getInt("idMeal"),
+        Recipe recipe = new Recipe(0, recipeItem.getInt("idMeal"),
                 recipeItem.getString("strMeal"),
                 recipeItem.getString("strMealThumb"), desc, instructions);
 

@@ -31,14 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private RecipeRepository recipeRepo;
     private RecyclerView recipeView;
-    private RecipePreview randomRecipe = null;
     private FragmentActivity context;
-
     private View view;
     private FlexboxLayout areaLayout, categoryLayout;
     private ShimmerFrameLayout shimmerLayout;
+
+    private RecipeRepository recipeRepo;
+    private RecipePreview randomRecipe = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package com.example.recipefinder2.ui;
+package com.example.recipefinder.ui;
 
 import android.os.Bundle;
 
@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.recipefinder2.R;
-import com.example.recipefinder2.databinding.ActivityHomeBinding;
+import com.example.recipefinder.R;
+import com.example.recipefinder.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
@@ -40,8 +40,7 @@ public class HomeActivity extends AppCompatActivity {
 
             // Set the initial fragment
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout, homeFragment)
-                    .commit();
+                    .add(R.id.frame_layout, homeFragment).commit();
         } else {
             homeFragment = (HomeFragment) getSupportFragmentManager()
                     .findFragmentByTag("home");

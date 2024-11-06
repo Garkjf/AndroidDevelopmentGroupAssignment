@@ -16,7 +16,7 @@ import android.widget.Spinner;
 
 import com.example.recipefinder.R;
 import com.example.recipefinder.adapter.IngredientAdapter;
-import com.example.recipefinder.db.RecipeDatabase;
+import com.example.recipefinder.db.RecipeDAO;
 import com.example.recipefinder.model.Ingredient;
 import com.example.recipefinder.model.RecipePreview;
 
@@ -26,8 +26,7 @@ import java.util.stream.Collectors;
 
 public class ShoppingListFragment extends Fragment {
     private List<RecipePreview> recipes;
-    private ArrayAdapter<String> adapter;
-    private RecipeDatabase recipeDB;
+    private RecipeDAO recipeDAO;
     private IngredientAdapter ingredientAdapter;
     private FragmentActivity context;
 
@@ -36,12 +35,11 @@ public class ShoppingListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         context = requireActivity();
-        recipeDB = new RecipeDatabase(context);
-        recipes = recipeDB.getRecipePreviews();
-
-        adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,
-                recipes.stream().map(RecipePreview::getName).collect(Collectors.toList()));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        recipeDAO = new RecipeDAO(context);
+        recipes = recipeDAO.getRecipePreviews();
+        if (recipes == null) {
+            recipes = new ArrayList<>();
+        }
 
         ingredientAdapter = new IngredientAdapter(new ArrayList<>());
     }
@@ -56,6 +54,9 @@ public class ShoppingListFragment extends Fragment {
         shoppingListView.setAdapter(ingredientAdapter);
 
         Spinner recipeSpinner = view.findViewById(R.id.recipeSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,
+                recipes.stream().map(RecipePreview::getName).collect(Collectors.toList()));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         recipeSpinner.setAdapter(adapter);
 
         recipeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -63,8 +64,10 @@ public class ShoppingListFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
                                        int position, long id) {
                 RecipePreview selectedRecipe = recipes.get(position);
-                List<Ingredient> ingredients = recipeDB.getIngredients(selectedRecipe.getRecipeId());
-                ingredientAdapter.setIngredients(ingredients);
+                List<Ingredient> ingredients = recipeDAO.getIngredients(selectedRecipe.getApiId());
+                if (ingredients != null) {
+                    ingredientAdapter.setIngredients(ingredients);
+                }
             }
 
             @Override

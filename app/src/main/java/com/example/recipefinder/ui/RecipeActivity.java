@@ -21,7 +21,7 @@ import com.example.recipefinder.R;
 import com.example.recipefinder.api.RecipeRepository;
 import com.example.recipefinder.adapter.IngredientAdapter;
 import com.example.recipefinder.api.ResponseListener;
-import com.example.recipefinder.db.RecipeDatabase;
+import com.example.recipefinder.db.RecipeDAO;
 import com.example.recipefinder.model.Recipe;
 import com.example.recipefinder.model.RecipePreview;
 import com.example.recipefinder.utils.BookmarkManager;
@@ -93,10 +93,10 @@ public class RecipeActivity extends AppCompatActivity {
 
     // Get the recipe from the API
     private void getRecipeFromAPI() {
-        RecipeRepository recipeDAO = new RecipeRepository(RecipeActivity.this);
+        RecipeRepository recipeRepo = new RecipeRepository(RecipeActivity.this);
 
         // Make the asynchronous API call
-        recipeDAO.getFullRecipe(preview.getRecipeId(), new ResponseListener<Recipe>() {
+        recipeRepo.getFullRecipe(preview.getApiId(), new ResponseListener<Recipe>() {
             @Override
             public void onError(String message) {
                 Toast.makeText(RecipeActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -111,10 +111,8 @@ public class RecipeActivity extends AppCompatActivity {
 
     // Get the recipe from the database
     private void getRecipeFromDatabase() {
-        Recipe recipe;
-        try (RecipeDatabase recipeDB = new RecipeDatabase(RecipeActivity.this)) {
-            recipe = recipeDB.getRecipe(preview.getRecipeId());
-        }
+        RecipeDAO recipeDAO = new RecipeDAO(RecipeActivity.this);
+        Recipe recipe = recipeDAO.getRecipe(preview.getApiId());
 
         if (recipe == null) {
             Toast.makeText(this, "Recipe not found.", Toast.LENGTH_SHORT).show();

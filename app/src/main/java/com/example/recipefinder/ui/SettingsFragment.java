@@ -1,4 +1,4 @@
-package com.example.recipefinder2.ui;
+package com.example.recipefinder.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,15 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.recipefinder2.MainActivity;
-import com.example.recipefinder2.R;
+import com.example.recipefinder.MainActivity;
+import com.example.recipefinder.R;
+import com.example.recipefinder.model.User;
 
 public class SettingsFragment extends Fragment {
-
-    public SettingsFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
