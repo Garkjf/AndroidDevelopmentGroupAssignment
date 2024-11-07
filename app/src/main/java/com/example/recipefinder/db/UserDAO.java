@@ -56,13 +56,14 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues userValues = new ContentValues();
+        userValues.put(USER_NAME, newUser.getUsername());
         userValues.put(USER_EMAIL, newUser.getEmail());
-        userValues.put(USER_PASSWORD, newUser.getEmail());
+        userValues.put(USER_PASSWORD, newUser.getPassword());
 
-        db.update(TABLE_USERS, userValues,USER_ID + " = ?",
-                new String[]{String.valueOf(id)});
+        db.update(TABLE_USERS, userValues, USER_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
+
 
     public void deleteUser(int id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
