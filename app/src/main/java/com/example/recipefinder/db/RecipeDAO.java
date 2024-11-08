@@ -98,7 +98,6 @@ public class RecipeDAO {
             if (!cursor.moveToFirst()) return null;
 
             recipe = new Recipe(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(RECIPE_ID)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(API_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(RECIPE_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(RECIPE_IMAGE_URL)),

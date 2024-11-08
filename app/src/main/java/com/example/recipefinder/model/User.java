@@ -1,8 +1,6 @@
 package com.example.recipefinder.model;
 
-import java.io.Serializable;
-
-public class User implements Serializable {
+public class User {
     private final int id;
     private  String username;
     private  String email;

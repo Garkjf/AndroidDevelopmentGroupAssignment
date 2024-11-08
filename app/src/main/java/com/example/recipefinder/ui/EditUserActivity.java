@@ -1,7 +1,6 @@
 package com.example.recipefinder.ui;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -51,40 +50,44 @@ public class EditUserActivity extends AppCompatActivity {
 
         // Validation checks for mandatory fields
         if (newUsername.isEmpty() || newEmail.isEmpty()) {
-            Toast.makeText(this, "Username and Email fields cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Username and Email fields cannot be empty",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
         User currentUser = UserSession.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            // If the user wants to change the password, check the old password
-            if (!oldPassword.isEmpty() || !newPassword.isEmpty()) {
+        if (currentUser == null) {
+            return;
+        }
 
-                if (oldPassword.isEmpty() || newPassword.isEmpty()) {
-                    Toast.makeText(this, "Please fill both old and new passwords to update the password", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (!currentUser.getPassword().equals(oldPassword)) {
-                    Toast.makeText(this, "Old password is incorrect", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                currentUser.setPassword(newPassword);
+        // If the user wants to change the password, check the old password
+        if (!oldPassword.isEmpty() || !newPassword.isEmpty()) {
+            if (oldPassword.isEmpty() || newPassword.isEmpty()) {
+                Toast.makeText(this, "Please fill both old and new passwords " +
+                                "to update the password", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            currentUser.setUsername(newUsername);
-            currentUser.setEmail(newEmail);
+            if (!currentUser.getPassword().equals(oldPassword)) {
+                Toast.makeText(this, "Old password is incorrect",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            userDAO.editUser(currentUser.getId(), currentUser);
-
-            // Update session
-            UserSession.getInstance().setCurrentUser(currentUser);
-
-            Toast.makeText(this, "User details updated", Toast.LENGTH_SHORT).show();
-
-            finish();
+            currentUser.setPassword(newPassword);
         }
+
+        currentUser.setUsername(newUsername);
+        currentUser.setEmail(newEmail);
+
+        userDAO.editUser(currentUser.getId(), currentUser);
+
+        // Update session
+        UserSession.getInstance().setCurrentUser(currentUser);
+
+        Toast.makeText(this, "User details updated", Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 }
 

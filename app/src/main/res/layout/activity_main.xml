@@ -1,6 +1,7 @@
 <!-- res/layout/activity_main.xml -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,14 +12,20 @@
         android:id="@+id/username"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="@string/username" />
+        android:hint="@string/username"
+        android:importantForAutofill="no"
+        android:minHeight="48dp"
+        tools:ignore="TextFields" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:hint="@string/password"
-        android:inputType="textPassword" />
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        tools:ignore="TextContrastCheck" />
 
     <Button
         android:id="@+id/loginButton"

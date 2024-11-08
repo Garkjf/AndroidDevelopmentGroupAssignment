@@ -7,14 +7,13 @@ import java.util.List;
  * Class representing the full recipe
  */
 public class Recipe {
-    private final int recipeID, apiID;
+    private final int apiID;
     private final String recipeName, imgURL, instruction, description;
     private final List<Ingredient> ingredients = new ArrayList<>();
 
     // Constructor
-    public Recipe(int recipeID, int apiID, String recipeName, String imgURL,
+    public Recipe(int apiID, String recipeName, String imgURL,
                   String description, String instruction) {
-        this.recipeID = recipeID;
         this.apiID = apiID;
         this.recipeName = recipeName;
         this.imgURL = imgURL;
@@ -23,10 +22,6 @@ public class Recipe {
     }
 
     // Getters
-    public int getRecipeID() {
-        return recipeID;
-    }
-
     public int getApiID() {
         return apiID;
     }

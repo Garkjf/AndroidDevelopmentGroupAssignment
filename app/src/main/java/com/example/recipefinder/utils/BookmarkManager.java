@@ -29,8 +29,7 @@ public class BookmarkManager {
 
         // Set the button's background based on the current favorite status
         favButton.setBackgroundResource(favourites.contains(recipe.getApiId())
-                ? R.drawable.baseline_bookmark_24
-                : R.drawable.baseline_bookmark_border_24);
+                ? R.drawable.baseline_bookmark_24 : R.drawable.baseline_bookmark_border_24);
 
         // Set up click listener for the favorite button
         favButton.setOnClickListener(v -> toggleFavorite(favButton, recipe));
@@ -71,4 +70,3 @@ public class BookmarkManager {
         });
     }
 }
-
