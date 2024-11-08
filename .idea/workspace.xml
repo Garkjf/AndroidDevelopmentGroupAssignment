@@ -5,6 +5,11 @@
       <config />
     </shared>
     <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_edit_user.xml">
+        <config>
+          <theme>@style/Theme.RecipeFinder</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_home.xml">
         <config>
           <theme>@style/Theme.RecipeFinder</theme>
@@ -81,11 +86,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aec91412-9632-4e18-b440-56ecdcfeec6b" name="Changes" comment="Re-designed recipe page and changed comments with get ingredients function">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/db/RecipeDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/db/UserDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/UserSession.java" afterDir="false" />
+    <list default="true" id="aec91412-9632-4e18-b440-56ecdcfeec6b" name="Changes" comment="Added login and register function, included user session">
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/sha1-checksums.bin" afterDir="false" />
@@ -116,19 +117,13 @@
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/db/RecipeDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/db/RecipeDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/Recipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/RecipePreview.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/model/RecipePreview.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/FavouritesFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/FavouritesFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/HomeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/HomeActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/HomeFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/HomeFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/RecipeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/RecipeActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/RegisterActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/RegisterActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/EditUserActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/EditUserActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/SettingsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/SettingsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/ShoppingListFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/ui/ShoppingListFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/BookmarkManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/BookmarkManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/JSONConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/recipefinder/utils/JSONConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_edit_user.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_edit_user.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,39 +219,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Android App.app.executor": "Run",
-    "PROJECT_TRUSTED_KEY": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/calvi/Downloads",
-    "project.structure.last.edited": "SDK Location",
-    "project.structure.proportion": "0.17",
-    "project.structure.side.proportion": "0.2",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
+    &quot;PROJECT_TRUSTED_KEY&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/calvi/Downloads&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDK Location&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
   },
-  "keyToStringList": {
-    "com.android.tools.idea.sqlite.queryhistory": [
-      "select ingredient_measure, ingredient_name from ingredients where recipe_id=4;",
-      "SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id IN (select recipe_id from favourites where user_id = 5)",
-      "SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id = 3;",
-      "SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id in (select recipe_id from favourites where user_id = 4);",
-      "SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id in (select recipe_id from favourites where user_id = 4)"
+  &quot;keyToStringList&quot;: {
+    &quot;com.android.tools.idea.sqlite.queryhistory&quot;: [
+      &quot;select ingredient_measure, ingredient_name from ingredients where recipe_id=4;&quot;,
+      &quot;SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id IN (select recipe_id from favourites where user_id = 5)&quot;,
+      &quot;SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id = 3;&quot;,
+      &quot;SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id in (select recipe_id from favourites where user_id = 4);&quot;,
+      &quot;SELECT ingredient_measure, ingredient_name FROM ingredients WHERE recipe_id in (select recipe_id from favourites where user_id = 4)&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Properties",
-      "PLAIN_TEXT"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Properties&quot;,
+      &quot;PLAIN_TEXT&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="android.template.1922309306">
       <recent name="com.example.recipefinder" />
@@ -463,7 +458,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729686777898</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Added login and register function, included user session">
+      <option name="closed" value="true" />
+      <created>1730886221829</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1730886221829</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,6 +495,7 @@
     <MESSAGE value="Implemented bookmark feature and favourites page." />
     <MESSAGE value="Restructured database and implemented shopping list page" />
     <MESSAGE value="Re-designed recipe page and changed comments with get ingredients function" />
-    <option name="LAST_COMMIT_MESSAGE" value="Re-designed recipe page and changed comments with get ingredients function" />
+    <MESSAGE value="Added login and register function, included user session" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added login and register function, included user session" />
   </component>
 </project>

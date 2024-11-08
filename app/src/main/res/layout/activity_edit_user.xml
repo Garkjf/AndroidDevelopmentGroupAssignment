@@ -8,41 +8,46 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit User Details"
+        android:text="@string/edit_user_details"
         android:textSize="24sp"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:paddingBottom="16dp" />
 
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username" />
+        android:hint="@string/username"
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/edit_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email" />
+        android:hint="@string/email"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/edit_old_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Old Password"
-        android:inputType="textPassword" />
+        android:hint="@string/old_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="New Password"
-        android:inputType="textPassword" />
+        android:autofillHints=""
+        android:hint="@string/new_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"/>
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="@string/save"
         android:layout_marginTop="16dp" />
 </LinearLayout>

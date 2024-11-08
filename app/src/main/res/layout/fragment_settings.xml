@@ -9,39 +9,39 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textSize="24sp"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:paddingBottom="16dp" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username: "
+        android:text="@string/username_label"
         android:textSize="15sp"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:paddingBottom="16dp" />
 
     <TextView
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email:"
+        android:text="@string/email_label"
         android:textSize="15sp"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:paddingBottom="16dp" />
 
     <Button
         android:id="@+id/btn_change_user_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Change User Details" />
+        android:text="@string/change_user_details" />
 
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Logout"
+        android:text="@string/logout"
         android:layout_marginTop="16dp" />
 </LinearLayout>

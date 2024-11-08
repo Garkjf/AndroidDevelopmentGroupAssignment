@@ -31,6 +31,10 @@
             android:exported="false"
             android:label="Full Recipe"/>
         <activity
+            android:name=".ui.EditUserActivity"
+            android:exported="false"
+            android:label="Edit User Details"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

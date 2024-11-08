@@ -1,5 +1,6 @@
 package com.example.recipefinder.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.example.recipefinder.utils.UserSession;
 
 public class SettingsFragment extends Fragment {
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

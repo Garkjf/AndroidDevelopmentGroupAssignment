@@ -11,13 +11,13 @@
         android:id="@+id/username"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="Username" />
+        android:hint="@string/username" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword" />
 
     <Button
@@ -25,7 +25,7 @@
         android:layout_width="208dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Login" />
+        android:text="@string/login" />
 
     <!-- Register Button -->
     <Button
@@ -33,6 +33,6 @@
         android:layout_width="208dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Register" />
+        android:text="@string/register" />
 
 </LinearLayout>
