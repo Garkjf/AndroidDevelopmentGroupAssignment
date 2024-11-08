@@ -33,10 +33,10 @@ public class UserDAO {
         db.close();
     }
 
-    public User getUser(String username) {
+    public User getUser(String email) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String userQuery = "SELECT * FROM " + TABLE_USERS + " WHERE user_name = ?";
-        Cursor cursor = db.rawQuery(userQuery, new String[]{String.valueOf(username)});
+        String userQuery = "SELECT * FROM " + TABLE_USERS + " WHERE user_email = ?";
+        Cursor cursor = db.rawQuery(userQuery, new String[]{String.valueOf(email)});
         cursor.moveToFirst();
         User user;
         if (cursor.getCount() == 0) return null;
