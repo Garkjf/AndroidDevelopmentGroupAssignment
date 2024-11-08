@@ -8,11 +8,18 @@
     android:gravity="center"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="2dp"
+        android:src="@drawable/ic_recipe" />
+
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/email"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="@string/username"
+        android:hint="@string/email"
         android:importantForAutofill="no"
         android:minHeight="48dp"
         tools:ignore="TextFields" />
