@@ -12,7 +12,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.recipefinder.model.Recipe;
 import com.example.recipefinder.model.RecipePreview;
 import com.example.recipefinder.utils.JSONConverter;
-import com.example.recipefinder.utils.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +28,8 @@ public class RecipeRepository {
     }
 
     // Makes a request to the API
-    private void makeRequest(String url, Response.Listener<JSONObject> responseListener,
-                             ResponseListener<?> listener) {
+    private void makeRequest(String url, ResponseListener<?> listener,
+                             Response.Listener<JSONObject> responseListener) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 responseListener, error -> handleVolleyError(error, listener)
         );
@@ -52,14 +51,14 @@ public class RecipeRepository {
 
     // General method to retrieve a list of recipes
     private void fetchRecipes(String url, ResponseListener<List<RecipePreview>> listener) {
-        makeRequest(url, response -> {
+        makeRequest(url, listener, response -> {
             try {
                 List<RecipePreview> recipes = JSONConverter.getRecipes(response);
                 listener.onResponse(recipes);
             } catch (JSONException e) {
                 listener.onError("Cannot fetch recipes");
             }
-        }, listener);
+        });
     }
 
     // Retrieves recipes by search query
@@ -85,26 +84,26 @@ public class RecipeRepository {
     public void getFullRecipe(int recipeID, ResponseListener<Recipe> listener) {
         String url = String.format(urlPrefix + "lookup.php?i=%s", recipeID);
 
-        makeRequest(url, response -> {
+        makeRequest(url, listener, response -> {
             try {
                 Recipe recipe = JSONConverter.getFullRecipe(response);
                 listener.onResponse(recipe);
             } catch (JSONException e) {
                 listener.onError("Cannot fetch full recipe");
             }
-        }, listener);
+        });
     }
 
     // Retrieves a random recipe
     public void getRandomRecipe(ResponseListener<RecipePreview> listener) {
         String url = urlPrefix + "random.php";
-        makeRequest(url, response -> {
+        makeRequest(url, listener, response -> {
             try {
                 RecipePreview recipe = JSONConverter.getRecipes(response).get(0);
                 listener.onResponse(recipe);
             } catch (JSONException e) {
                 listener.onError("Recipes not found");
             }
-        }, listener);
+        });
     }
 }

@@ -36,8 +36,8 @@ public class JSONConverter {
                 recipeItem.getString("strArea"));
 
         Recipe recipe = new Recipe(recipeItem.getInt("idMeal"),
-                recipeItem.getString("strMeal"),
-                recipeItem.getString("strMealThumb"), desc, instructions);
+                recipeItem.getString("strMeal"), recipeItem.getString("strMealThumb"),
+                desc, instructions);
 
         for (int i = 1; i <= 20; i++) {
             String ingredient = recipeItem.getString("strIngredient" + i).trim();
