@@ -27,7 +27,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         this.ingredients = ingredients;
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,12 +38,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ingredient ingredient = ingredients.get(position);
-        holder.ingrName.setText(ingredient.toString());
-
-        String imgURL = String.format("https://www.themealdb.com/images/ingredients/%s-Small.png",
-                                        ingredient.getName().replace(" ", "%20"));
-        Picasso.get().load(imgURL).resize(80, 80)
-                .centerCrop().placeholder(R.drawable.ic_ingredient).into(holder.ingrImg);
+        holder.bindIngredient(ingredient);
     }
 
     @Override
@@ -62,14 +56,23 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     // ViewHolder for IngredientAdapter
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView ingrImg;
-        public TextView ingrName;
+        private final ImageView ingrImg;
+        private final TextView ingrName;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             ingrImg = itemView.findViewById(R.id.ingr_img);
             ingrName = itemView.findViewById(R.id.ingr_name);
+        }
+
+        public void bindIngredient(Ingredient ingredient) {
+            ingrName.setText(ingredient.toString());
+
+            String imgURL = String.format("https://www.themealdb.com/images/ingredients/%s-Small.png",
+                    ingredient.getName().replace(" ", "%20"));
+            Picasso.get().load(imgURL).resize(80, 80).centerCrop()
+                    .placeholder(R.drawable.ic_ingredient).into(ingrImg);
         }
     }
 }

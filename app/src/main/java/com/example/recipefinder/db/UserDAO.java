@@ -42,10 +42,10 @@ public class UserDAO {
         if (cursor.getCount() == 0) return null;
 
         user = new User(
-            cursor.getInt(cursor.getColumnIndexOrThrow(USER_ID)),
-            cursor.getString(cursor.getColumnIndexOrThrow(USER_NAME)),
-            cursor.getString(cursor.getColumnIndexOrThrow(USER_EMAIL)),
-            cursor.getString(cursor.getColumnIndexOrThrow(USER_PASSWORD))
+                cursor.getInt(cursor.getColumnIndexOrThrow(USER_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(USER_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(USER_EMAIL)),
+                cursor.getString(cursor.getColumnIndexOrThrow(USER_PASSWORD))
         );
 
         cursor.close();
@@ -72,7 +72,7 @@ public class UserDAO {
         final String RECIPE_ID = "recipe_id";
 
         String ingredientCriteria = String.format("%s IN (SELECT %s FROM recipes WHERE %s = ?)",
-                                    RECIPE_ID, RECIPE_ID, USER_ID);
+                RECIPE_ID, RECIPE_ID, USER_ID);
 
         db.delete("ingredients", ingredientCriteria, userID);
         db.delete("recipes", USER_ID + " = ?", userID);

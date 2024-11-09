@@ -2,25 +2,24 @@ package com.example.recipefinder.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.recipefinder.R;
-import com.example.recipefinder.adapter.RecipeAdapter;
+import com.example.recipefinder.adapter.FavouritesAdapter;
 import com.example.recipefinder.db.RecipeDAO;
 import com.example.recipefinder.model.RecipePreview;
 
 import java.util.List;
 
 public class FavouritesFragment extends Fragment {
-    private RecipeAdapter adapter;
+    private FavouritesAdapter adapter;
     private FragmentActivity context;
     private RecipeDAO recipeDAO;
 
@@ -32,8 +31,7 @@ public class FavouritesFragment extends Fragment {
         recipeDAO = new RecipeDAO(context);
 
         List<RecipePreview> recipes = recipeDAO.getRecipePreviews();
-
-        adapter = new RecipeAdapter(recipes);
+        adapter = new FavouritesAdapter(recipes, recipeDAO);
         adapter.setOnClickListener(item -> {
             Intent intent = RecipeActivity.newDBIntent(context, item);
             startActivity(intent);

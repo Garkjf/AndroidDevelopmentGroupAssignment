@@ -141,6 +141,7 @@ public class HomeFragment extends Fragment {
                 shimmerLayout.stopShimmer();
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onResponse(RecipePreview response) {
                 shimmerLayout.stopShimmer();

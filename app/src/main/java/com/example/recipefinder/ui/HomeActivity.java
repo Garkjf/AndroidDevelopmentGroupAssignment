@@ -57,14 +57,11 @@ public class HomeActivity extends AppCompatActivity {
         binding.bottomNavMenu.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
                 replaceFragment(homeFragment);
-            }
-            else if (item.getItemId() == R.id.favourites) {
+            } else if (item.getItemId() == R.id.favourites) {
                 replaceFragment(favouritesFragment);
-            }
-            else if (item.getItemId() == R.id.shopping_list) {
+            } else if (item.getItemId() == R.id.shopping_list) {
                 replaceFragment(shoppingListFragment);
-            }
-            else if (item.getItemId() == R.id.settings) {
+            } else if (item.getItemId() == R.id.settings) {
                 replaceFragment(settingsFragment);
             }
 
@@ -72,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);

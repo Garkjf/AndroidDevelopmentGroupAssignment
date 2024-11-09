@@ -39,7 +39,7 @@ public class SettingsFragment extends Fragment {
             usernameTextView.setText("Username: " + currentUser.getUsername());
             emailTextView.setText("Email: " + currentUser.getEmail());
         }
-        
+
         changeUserDetailsButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditUserActivity.class);
             startActivity(intent);

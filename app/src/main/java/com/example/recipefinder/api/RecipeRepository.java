@@ -77,13 +77,13 @@ public class RecipeRepository {
 
     // Retrieves recipes by area
     public void getRecipesByArea(@NonNull String area, ResponseListener<List<RecipePreview>> listener) {
-        String url = String.format(urlPrefix+"filter.php?a=%s", area);
+        String url = String.format(urlPrefix + "filter.php?a=%s", area);
         fetchRecipes(url, listener);
     }
 
     // Retrieves a full recipe
     public void getFullRecipe(int recipeID, ResponseListener<Recipe> listener) {
-        String url = String.format(urlPrefix+"lookup.php?i=%s", recipeID);
+        String url = String.format(urlPrefix + "lookup.php?i=%s", recipeID);
 
         makeRequest(url, response -> {
             try {
@@ -97,7 +97,7 @@ public class RecipeRepository {
 
     // Retrieves a random recipe
     public void getRandomRecipe(ResponseListener<RecipePreview> listener) {
-        String url = urlPrefix+"random.php";
+        String url = urlPrefix + "random.php";
         makeRequest(url, response -> {
             try {
                 RecipePreview recipe = JSONConverter.getRecipes(response).get(0);

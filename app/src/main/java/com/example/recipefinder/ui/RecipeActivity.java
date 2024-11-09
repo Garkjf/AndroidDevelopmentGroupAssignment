@@ -66,7 +66,7 @@ public class RecipeActivity extends AppCompatActivity {
         recipeName.setText(preview.getName());
 
         ImageView recipeImg = findViewById(R.id.recipe_image);
-        Picasso.get().load(preview.getImgURL()).resize(300,300)
+        Picasso.get().load(preview.getImgURL()).resize(300, 300)
                 .centerCrop().into(recipeImg);
 
         boolean isLoaded = i.getBooleanExtra("LOADED", false);

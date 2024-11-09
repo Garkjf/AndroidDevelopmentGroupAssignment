@@ -42,7 +42,7 @@ public class BookmarkManager {
 
         if (favourites.contains(apiID)) {
             // Remove from favorites
-            recipeDAO.deleteRecipe(recipe.getRecipeId());
+            recipeDAO.deleteRecipe(apiID);
             Toast.makeText(context, "Recipe removed from favourites", Toast.LENGTH_SHORT).show();
             favButton.setBackgroundResource(R.drawable.baseline_bookmark_border_24);
         } else {

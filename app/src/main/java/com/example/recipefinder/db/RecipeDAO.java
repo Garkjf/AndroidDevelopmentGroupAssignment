@@ -70,6 +70,7 @@ public class RecipeDAO {
         String favouritesQuery = String.format("SELECT * FROM %s WHERE %s = ?",
                 TABLE_FAVOURITES, USER_ID);
         Cursor cursor = db.rawQuery(favouritesQuery, new String[]{String.valueOf(userID)});
+
         while (cursor.moveToNext()) {
             returnList.add(new RecipePreview(
                     cursor.getInt(cursor.getColumnIndexOrThrow(API_ID)),
@@ -90,11 +91,11 @@ public class RecipeDAO {
         try {
             // Query for recipe and ingredients in a single JOIN query
             String query = String.format("SELECT f.*, i.%s, i.%s FROM %s f LEFT JOIN %s i " +
-                                         "ON f.%s = i.%s WHERE f.%s = ?",
+                            "ON f.%s = i.%s WHERE f.%s = ? AND f.%s = ?",
                     INGREDIENT_NAME, INGREDIENT_MEASURE, TABLE_FAVOURITES, TABLE_INGREDIENTS,
-                    RECIPE_ID, RECIPE_ID, API_ID);
+                    RECIPE_ID, RECIPE_ID, API_ID, USER_ID);
 
-            cursor = db.rawQuery(query, new String[]{String.valueOf(apiId)});
+            cursor = db.rawQuery(query, new String[]{String.valueOf(apiId), String.valueOf(userID)});
             if (!cursor.moveToFirst()) return null;
 
             recipe = new Recipe(
@@ -132,7 +133,7 @@ public class RecipeDAO {
 
         Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(userID)});
         while (cursor.moveToNext()) {
-            returnSet.add(cursor.getInt(cursor.getColumnIndexOrThrow("api_id")));
+            returnSet.add(cursor.getInt(cursor.getColumnIndexOrThrow(API_ID)));
         }
         cursor.close();
 
@@ -141,12 +142,31 @@ public class RecipeDAO {
     }
 
     // Delete a recipe from the database
-    public void deleteRecipe(int id) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+    public void deleteRecipe(int apiId) {
 
-        db.delete(TABLE_FAVOURITES, RECIPE_ID + " = ?", new String[]{String.valueOf(id)});
-        db.delete(TABLE_INGREDIENTS, RECIPE_ID + " = ?", new String[]{String.valueOf(id)});
-        db.close();
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+            // First, get the recipe_id associated with the given api_id and user_id
+            String query = String.format("SELECT %s FROM %s WHERE %s = ? AND %s = ?",
+                    RECIPE_ID, TABLE_FAVOURITES, API_ID, USER_ID);
+            String[] queryParams = new String[]{String.valueOf(apiId), String.valueOf(userID)};
+
+            Cursor cursor = db.rawQuery(query, queryParams);
+
+            if (!cursor.moveToFirst()) {
+                cursor.close();
+                return;
+            }
+
+            int recipeId = cursor.getInt(cursor.getColumnIndexOrThrow(RECIPE_ID));
+
+            // Delete ingredients then favourites
+            db.delete(TABLE_INGREDIENTS, "recipe_id = ?",
+                    new String[]{String.valueOf(recipeId)});
+            db.delete(TABLE_FAVOURITES, String.format("%s = ? AND %s = ?", API_ID, USER_ID),
+                    queryParams);
+
+            cursor.close();
+        }
     }
 
     public List<Ingredient> getIngredients(int apiId) {
@@ -155,7 +175,7 @@ public class RecipeDAO {
 
         // Query for recipe and ingredients in a single JOIN query
         String query = String.format("SELECT %s, %s FROM %s WHERE %s IN " +
-                                     "(SELECT %s FROM %s WHERE %s = ?)",
+                        "(SELECT %s FROM %s WHERE %s = ?)",
                 INGREDIENT_MEASURE, INGREDIENT_NAME, TABLE_INGREDIENTS, RECIPE_ID,
                 RECIPE_ID, TABLE_FAVOURITES, API_ID);
 
