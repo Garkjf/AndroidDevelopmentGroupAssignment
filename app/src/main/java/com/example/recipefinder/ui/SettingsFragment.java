@@ -18,6 +18,7 @@ import com.example.recipefinder.model.User;
 import com.example.recipefinder.utils.UserSession;
 
 public class SettingsFragment extends Fragment {
+    private TextView usernameTextView, emailTextView;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -26,8 +27,8 @@ public class SettingsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        TextView usernameTextView = view.findViewById(R.id.name);
-        TextView emailTextView = view.findViewById(R.id.email);
+        usernameTextView = view.findViewById(R.id.name);
+        emailTextView = view.findViewById(R.id.email);
         Button changeUserDetailsButton = view.findViewById(R.id.btn_change_user_details);
         Button logoutButton = view.findViewById(R.id.btn_logout);
 
@@ -54,5 +55,17 @@ public class SettingsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onResume() {
+        super.onResume();
+        User currentUser = UserSession.getInstance().getCurrentUser();
+        // Refresh data when the fragment is visible
+        if (currentUser != null) {
+            usernameTextView.setText("Username: " + currentUser.getUsername());
+            emailTextView.setText("Email: " + currentUser.getEmail());
+        }
     }
 }
